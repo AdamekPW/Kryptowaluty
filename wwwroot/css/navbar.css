@@ -1,0 +1,10 @@
+﻿.UpBar {
+    display: flex;
+    justify-content: center;
+    border-color: gray;
+    /*border: 1px solid;*/
+}
+.UpBarContainer {
+    display: inline;
+    
+}

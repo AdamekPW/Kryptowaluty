@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Currency>
+@{
+	ViewData["Title"] = "Currencies";
+}
+
+@{
+	foreach (Currency currency in Model)
+	{
+		<div style="display: inline">
+			<div>
+				@currency.Name
+			</div>
+		</div>
+	}
+}
