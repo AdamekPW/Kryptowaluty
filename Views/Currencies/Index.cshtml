@@ -2,14 +2,48 @@
 @{
 	ViewData["Title"] = "Currencies";
 }
+<link rel="stylesheet" href="~/css/Currencies.css" />
 
-@{
-	foreach (Currency currency in Model)
-	{
-		<div style="display: inline">
-			<div>
-				@currency.Name
-			</div>
-		</div>
-	}
-}
+<table class="table table-bordered table-striped style=width:100%">
+	<thead>
+		<tr>
+			<th>Currency</th>
+			<th>Value</th>
+			<th>24h low</th>
+			<th>24h high</th>
+			<th>Change (%)</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (Currency currency in Model)
+		{
+			<tr>
+				<td width="20%"> @currency.Code </td>
+				<td width="20%"> @Math.Round(currency.Value, 3) </td>
+				<td width="20%"> @Math.Round(currency.Low, 3) </td>
+				<td width="20%"> @Math.Round(currency.High, 3)</td>
+				@if (Math.Round(currency.Change,2) < 0)
+				{
+					<td width="20%" style="color: red">
+						@Math.Round(currency.Change, 2)
+					</td>
+				}
+				else if (Math.Round(currency.Change, 2) > 0)
+				{
+					<td width="20%" style="color: forestgreen">
+						@Math.Round(currency.Change, 2)
+					</td>
+				}
+				else
+				{
+					<td width="20%" style="color: black">
+						@Math.Round(currency.Change, 2)
+					</td>
+				}
+				
+			</tr>
+		}
+	</tbody>
+</table>
+
+

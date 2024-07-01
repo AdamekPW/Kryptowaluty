@@ -1,32 +1,50 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-/*
-Waluty: (Currencies)
-nazwa, skrót, obecna wartość, 24h change (%), 24h low, 24h high
-*/
+namespace ASP_.NET_nauka.Models;
 
-namespace ASP_.NET_nauka.Models
+public partial class Currency
 {
-	public class Currency
-	{
-		[Key]
-		public string Id { get; set; } = null!;
+	[Key]
+	[StringLength(30)]
+	public string Id { get; set; } = null!;
 
-		[Required]
-		public string Name { get; set; } = null!;
+	[Required]
+	[StringLength(40)]
+	public string Name { get; set; } = null!;
 
-		[Required]
-		public string Code { get; set; } = null!;
+	[Required]
+	[StringLength(10)]
+	public string Code { get; set; } = null!;
 
-		public double Value { get; set; }
+	[Column(TypeName = "decimal(20, 10)")]
+	[Range(0, double.MaxValue, ErrorMessage = "Value must be non-negative.")]
+	public decimal Value { get; set; }
 
-		public double Change {  get; set; }
+	[Column(TypeName = "decimal(20, 10)")]
+	[Range(0, double.MaxValue, ErrorMessage = "Low must be non-negative.")]
+	public decimal Low { get; set; }
 
-		public double Low { get; set; }
+	[Column(TypeName = "decimal(20, 10)")]
+	[Range(0, double.MaxValue, ErrorMessage = "High must be non-negative.")]
+	public decimal High { get; set; }
 
-		public double High { get; set; }
+	[Required]
+	[Column(TypeName = "decimal(4, 2)")]
+	public decimal Change { get; set; }
+
+	[Required]
+	public DateTime Date { get; set; }
+
+	[Column(TypeName = "decimal(38, 10)")]
+	[Range(0, double.MaxValue, ErrorMessage = "Sum must be non-negative.")]
+	public decimal Sum { get; set; }
+
+	[Range(0, int.MaxValue, ErrorMessage = "Measurement must be non-negative.")]
+	public int Measurement { get; set; }
 
 
-	}
+
 }
