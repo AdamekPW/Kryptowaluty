@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using ASP_.NET_nauka.Data;
+using ASP_.NET_nauka.Hubs;
 using ASP_.NET_nauka.Models;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,9 +12,11 @@ using OfficeOpenXml;
 public class DataUpdater : BackgroundService
 {
 	private readonly IServiceProvider _serviceProvider;
-	public DataUpdater(IServiceProvider serviceProvider)
+	private readonly IHubContext<CurrenciesHub> _hubContext;
+	public DataUpdater(IServiceProvider serviceProvider, IHubContext<CurrenciesHub> hubContext)
 	{
 		_serviceProvider = serviceProvider;
+		_hubContext = hubContext;
 	}
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
@@ -27,7 +31,8 @@ public class DataUpdater : BackgroundService
 			{
 				await UpdateCurrencies(dbContext);
 				CalculateChange(dbContext);
-				Console.WriteLine("----------DBUpdate----------");
+				await _hubContext.Clients.All.SendAsync("ReceiveMessage", "system", "Hello from DataUpdater!");
+                Console.WriteLine("----------DBUpdate----------");
 				await Task.Delay(TimeSpan.FromSeconds(120), stoppingToken);
 			}
 		}

@@ -16,8 +16,7 @@ namespace ASP_.NET_nauka.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<Currency> CurrenciesList = _db.Currencies;
-			return View(CurrenciesList);
+            return View();
         }
     }
 }

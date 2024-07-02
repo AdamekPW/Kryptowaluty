@@ -36,5 +36,5 @@ app.MapControllerRoute(
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-app.MapHub<ChatHub>("/chatHub");
+app.MapHub<CurrenciesHub>("/CurrenciesHub");
 app.Run();
