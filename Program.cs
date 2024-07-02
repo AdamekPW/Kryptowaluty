@@ -1,6 +1,6 @@
 using ASP_.NET_nauka.Data;
 using Microsoft.EntityFrameworkCore;
-
+using ASP_.NET_nauka.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -30,15 +30,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-/*app.UseEndpoints(endpoints => 
-{
-	endpoints.MapHub<>("/Currencies");
-});*/
 
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-
+app.MapHub<ChatHub>("/chatHub");
 app.Run();
