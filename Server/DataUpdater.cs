@@ -26,14 +26,16 @@ public class DataUpdater : BackgroundService
 			{
 				throw new Exception("Service provider error");
 			}
-			UpdateDatabase(dbContext);
+
+            UpdateDatabase(dbContext);
 			while (!stoppingToken.IsCancellationRequested)
 			{
 				await UpdateCurrencies(dbContext);
 				CalculateChange(dbContext);
-				await _hubContext.Clients.All.SendAsync("ReceiveMessage", "system", "Hello from DataUpdater!");
+				IEnumerable<Currency> currencies = dbContext.Currencies.ToList();
+				await _hubContext.Clients.All.SendAsync("ReceiveCurrencies", currencies);
                 Console.WriteLine("----------DBUpdate----------");
-				await Task.Delay(TimeSpan.FromSeconds(120), stoppingToken);
+				await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
 			}
 		}
 		
@@ -254,7 +256,7 @@ public class DataUpdater : BackgroundService
 			if (LastKnown != null && LastKnown.AvgValue != 0)
 			{
 				decimal change = ((currency.Value - LastKnown.AvgValue) / LastKnown.AvgValue) * 100;
-				currency.Change = change;
+				currency.Change = Math.Round(change,2);
 			}
 		}
 		_db.SaveChanges();

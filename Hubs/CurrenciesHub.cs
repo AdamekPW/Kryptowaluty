@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using ASP_.NET_nauka.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ASP_.NET_nauka.Hubs;
 
 public class CurrenciesHub : Hub
 {
-    public async Task SendMessage(string user, string message)
+    public async Task SendCurrencies(IEnumerable<Currency> Currencies)
     {
-        await Clients.All.SendAsync("ReceiveMessage", user, message);
+        await Clients.All.SendAsync("ReceiveCurrencies", Currencies);
     }
 }
