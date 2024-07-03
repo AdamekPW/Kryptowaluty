@@ -2,6 +2,9 @@ using System.Diagnostics;
 using ASP_.NET_nauka.Models;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 namespace ASP_.NET_nauka.Controllers
 {
 	public class HomeController : Controller
@@ -22,6 +25,7 @@ namespace ASP_.NET_nauka.Controllers
 		{
 			return View();
 		}
+
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

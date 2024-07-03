@@ -1,4 +1,4 @@
-﻿@model User
+﻿@model LoginTemplate
 @{
     ViewData["Title"] = "Login";
 }
@@ -15,7 +15,16 @@
             <input type="password" id="password" asp-for="Password" required>
             <label for="password">Password</label>
         </div>
+        <label>
+            <input type="checkbox" asp-for="KeepLoggedIn" />
+            Keep me logged In.
+        </label>
         <button type="submit" style="width:100%">Sign in</button>
+        @if(ViewData["ValidateMEssage"] != null)
+        {
+            <label style="color: red; text-align: center"> 
+                @ViewData["ValidateMessage"]</label>
+        }
     </form>
     <div class="signupContainer">
         <p>Not a member? <a asp-controller="Login" asp-action="SignUp"> Sign up</a></p>    

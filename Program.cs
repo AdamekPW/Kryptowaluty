@@ -1,6 +1,7 @@
 using ASP_.NET_nauka.Data;
 using Microsoft.EntityFrameworkCore;
 using ASP_.NET_nauka.Hubs;
+using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,7 +13,12 @@ builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(
 //builder.Services.AddHostedService<DataUpdater>();
 
 
-
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+	.AddCookie(option =>
+	{
+		option.LoginPath = "/Login";
+		option.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+	});
 
 
 var app = builder.Build();
@@ -27,6 +33,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
