@@ -1,7 +1,40 @@
-﻿
+﻿@model User
 @{
     ViewData["Title"] = "SignUp";
 }
+<link rel="stylesheet" href="~/css/SignUp.css" />
+<link rel="stylesheet" href="~/css/Login.css" />
 
-<h1>SignUp</h1>
+<div class="login-container" style="position: absolute">
+    <form class="login-form" asp-action="SignUpSubmit" method="post">
+        <h2> Sign up</h2>
+        <div class="form-group" style="margin-bottom: 0px">
+            <input placeholder="First name" asp-for="FirstName" id="firstname" required/>
+            <input placeholder="Last name" asp-for="LastName" id="lastname" required/>
+        </div>
+        <div id="BirthdateContainer" >
+            <label class="dateMargin" 6px; margi"> Birthdate</label>
+            <input type="date" class="datePicker" asp-for="BirthDate" id="datePicker" required />
+        </div>
+        <div class="form-group">
+            <input placeholder="Email" style="width: 100%;"  asp-for="Email" id="email" required/>
+            <input placeholder="Password" type="password" asp-for="Password" id="password1" required/>
+            <div class="strengthBar">
+                <div id="strengthIndicator" class="strength"></div>
+            </div>
+            @* <h6 id="strengthMessage"> Strength: </h6> *@
+            <input placeholder="Repeat password" type="password" id="password2"/>
+            <h6 id="PasswordMessage"></h6>
+        </div>
+        @if (TempData["AccountError"] != null)
+        {
+            <label style="color: red; text-align: center">
+                @TempData["AccountError"]
+            </label>
+        }
+        <button type="submit" id="submitButton"> Submit </button>
+    </form>
+</div>
 
+
+<script src="~/js/SignUp.js"></script>

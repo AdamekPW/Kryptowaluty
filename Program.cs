@@ -10,7 +10,7 @@ builder.Services.AddSignalR();
 builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(
 	builder.Configuration.GetConnectionString("DefaultConnection")
 	));
-//builder.Services.AddHostedService<DataUpdater>();
+builder.Services.AddHostedService<DataUpdater>();
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

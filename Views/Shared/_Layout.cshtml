@@ -11,32 +11,39 @@
 </head>
 <body>
     <header class="UpBar">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white">
-            <div class="UpBarContainer">
-         
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Currencies" asp-action="Index">Currencies</a>
-                        </li>
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="LogOut">Log out</a>
-                            </li> 
-                        } else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Log in</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
+        
+        <div class="UpBarContainer">
+            <div class="UpBarSubContainer">
+                <button>
+                    <a class="CustomLink text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </button>   
+                <button>
+                    <a class="CustomLink text-dark" asp-area="" asp-controller="Currencies" asp-action="Index">Currencies</a>
+                    <img src="/images/bitcoin.png" />
+                </button>
             </div>
-        </nav>
+            <div class="UpBarSubContainer">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <button>
+                        <a class="CustomLink text-dark" asp-area="" asp-controller="User" asp-action="Index"> Account</a>
+                        <img src="/images/userIcon.png" />
+                    </button>
+                    <button>
+                        <a class="CustomLink text-dark" asp-area="" asp-controller="Login" asp-action="LogOut" style="width:120px">Log out</a>
+                    </button>
+                } else
+                {
+                    <button>
+                        <a class="CustomLink text-dark" asp-area="" asp-controller="Login" asp-action="Index" style="width:120px">Log in</a>
+                    </button>
+                }
+            </div>
+        
+       
+               
+        </div>
+       
     </header>
     <div class="container">
         <main role="main" class="pb-3" style="display:flex; justify-content:center;">

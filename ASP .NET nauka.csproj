@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\SignUp.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="7.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
@@ -25,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Server\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

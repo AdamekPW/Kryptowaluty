@@ -5,32 +5,35 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-namespace ASP_.NET_nauka.Controllers
+using ASP_.NET_nauka.Data;
+namespace ASP_.NET_nauka.Controllers;
+
+public class HomeController : Controller
 {
-	public class HomeController : Controller
+	private readonly ILogger<HomeController> _logger;
+	private MyDbContext _db;
+
+	public HomeController(ILogger<HomeController> logger, MyDbContext db)
 	{
-		private readonly ILogger<HomeController> _logger;
+		_logger = logger;
+		_db = db;
+	}
 
-		public HomeController(ILogger<HomeController> logger)
-		{
-			_logger = logger;
-		}
+	public IActionResult Index()
+	{
+		IEnumerable<Currency> currencies = _db.Currencies.ToList();
+		return View(currencies);
+	}
 
-		public IActionResult Index()
-		{
-			return View();
-		}
-
-		public IActionResult Privacy()
-		{
-			return View();
-		}
+	public IActionResult Privacy()
+	{
+		return View();
+	}
 
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
+	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+	public IActionResult Error()
+	{
+		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 	}
 }

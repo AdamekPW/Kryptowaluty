@@ -1,0 +1,28 @@
+﻿.mainContainer {
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.menuContainer {
+    border-top: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    width: 15vw;
+}
+
+.menuContainer button {
+    background-color: transparent;
+    border: 0px solid transparent;
+    font-size: 20px;
+    padding: 10px;
+}
+.menuContainer button:hover {
+    color: yellowgreen;
+}
+
+.spaceContainer {
+    width: 85vw;
+    
+    
+}

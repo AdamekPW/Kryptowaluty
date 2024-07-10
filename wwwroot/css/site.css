@@ -1,3 +1,11 @@
+
+:root {
+    --c1: #00a0ff;
+    --c2: #76b3ff;
+    --c3: #a9c9ff;
+    --c4: #d0dfff;
+    --c5: #f0f6ff;
+}
 html {
   font-size: 14px;
 }

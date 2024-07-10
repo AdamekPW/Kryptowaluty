@@ -1,1 +1,83 @@
-﻿<p> Hello </p>
+﻿@model List<Currency>
+@{
+	ViewData["Title"] = "Currencies";
+}
+
+<link rel="stylesheet" href="~/css/Home.css" />
+<div class="mainContainer">
+	<div class="headerRow">
+		<p class="header"> Welcome to my&nbsp;</p>
+		<p class="header text" style="color: yellowgreen">  marketplace </p>
+	</div>
+	<div class="columns">
+		<div class="leftColumn">
+			<div style="display: flex; height: auto">
+				<p>This project uses&nbsp;</p> 
+				<a id="CoinGeckoLink" href="https://www.coingecko.com/pl/api">CoinGecko&nbsp;</a>
+				<p>API</p>
+			</div>
+			<a href="https://www.coingecko.com/pl/api">
+				<img src="~/images/coinGecko.png" id="CoinGeckoImg"/>
+				
+			</a>
+		</div>
+		<div class="rightColumn">
+			<br/>
+			<div class="currencyBox">
+				<p>Trending</p>
+				<table id="CurrTable" style="width:100%">
+					<thead>
+						<tr>
+							<th> Currency</th>
+							<th> Value</th>
+							<th> Change (%)</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if (Model != null)
+						{
+							
+							var SortedModel = Model
+							.OrderByDescending(x => x.Change)
+							.Take(5)
+							.ToList();
+							@foreach (var currency in SortedModel)
+							{
+								<tr>
+									<td><img src=@($"/images/Icons/{currency.Id}.svg") width="17" style="margin-right: 2px" /> @currency.Code </td>
+									<td>@FrontendFunctions.Make5Digits(currency.Value).ToString().Replace(',', '.') </td>
+									@if (currency.Change > 0)
+									{
+										<td style="color: green; font-weight: 500;"> +@currency.Change.ToString().Replace(',', '.')</td>
+									}
+									else if (currency.Change < 0)
+									{
+										<td style="color: red; font-weight: 500;"> @currency.Change.ToString().Replace(',','.').</td>
+									}
+									else 
+									{
+										<td style="color: black; font-weight: 500;"> @currency.Change.ToString().Replace(',', '.')</td>
+									}
+								</tr>
+							}
+						}
+
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<br/>
+	<div class="DescContainer">
+		<p> About project</p>
+		<img src="~/images/Icons/bitcoin.svg" />
+	</div>
+</div>
+
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/Home.js"></script>
+
+
+

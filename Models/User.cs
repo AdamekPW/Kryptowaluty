@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ASP_.NET_nauka.Models;
@@ -26,7 +28,7 @@ public partial class User
     public string Email { get; set; } = null!;
 
     [Required]
-    [StringLength(60)]
+    [StringLength(64)]
     public string Password { get; set; } = null!;
 
     [Required]
@@ -34,29 +36,18 @@ public partial class User
 
     public Role Role { get; set; } = null!;
 
-
-	public static bool IsEmailCorrect(string Email)
-	{
-		string Pattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
-		Regex regex = new Regex(Pattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
-
-		if (!regex.IsMatch(Email)) return false;
-		return true;
-	}
-	public static int PasswordStrongessLevel(string Password)
-	{
-		string StrongPasswordPattern = @"(?=.*[A-Z])(?=.*[!@#$%^&*(),.?:{}|<>])(?=.*[\d]).{12,}$";
-		Regex regex = new Regex(StrongPasswordPattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
-		if (regex.IsMatch(Password)) return 3;
-
-		string MediumPasswordPattern = @"(?=.*[A-Z])(?=.*[!@#$%^&*(),.?:{}|<>])(?=.*[\d]).{8,}$";
-		regex = new Regex(MediumPasswordPattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
-		if (regex.IsMatch(Password)) return 2;
-
-		string WeekPasswordPattern = @"^[\w ]{6,}$";
-		regex = new Regex(WeekPasswordPattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
-		if (regex.IsMatch(Password)) return 1;
-		return 0;
-	}
+    public static string CreateSHA256Hash(string Password)
+    {
+        using (SHA256 sha256Hash = SHA256.Create())
+        {
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(Password));
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
+        }
+    }
 
 }

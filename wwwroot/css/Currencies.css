@@ -1,6 +1,10 @@
 ﻿.MainBody {
     border: 2px solid;
     border-color: gainsboro;
+    
+}
+.MainBody td, tr {
+    font-size: 24px;
 }
 .RowContainer {
    display: flex;

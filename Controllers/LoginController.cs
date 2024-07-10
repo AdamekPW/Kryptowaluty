@@ -33,7 +33,10 @@ namespace ASP_.NET_nauka.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginTemplate loginTemplate)
         {
-            var User = _db.Users.Where(x => x.Email == loginTemplate.Email && x.Password == loginTemplate.Password).FirstOrDefault();
+            string HashedPassword = Models.User.CreateSHA256Hash(loginTemplate.Password);
+            var User = _db.Users
+                .Where(x => x.Email == loginTemplate.Email && x.Password == HashedPassword)
+                .FirstOrDefault();
             if (User != null)
             {
                 List<Claim> claims = new List<Claim>() {
@@ -60,15 +63,45 @@ namespace ASP_.NET_nauka.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 
+
+
+
+        [HttpGet]
         public IActionResult SignUp()
         {
             return View();
         }
+
+
+        [HttpPost]
+        public IActionResult SignUpSubmit(User user)
+        {
+            var _user = _db.Users.FirstOrDefault(x => x.Email == user.Email);
+            if (_user != null)
+            {
+                TempData["AccountError"] = "Email already exists";
+                return RedirectToAction("SignUp");
+            }
+
+            user.Password = Models.User.CreateSHA256Hash(user.Password);
+            user.RoleId = (from role in _db.Roles
+                        where role.Name == "User"
+                        select role.Id).FirstOrDefault();
+
+
+            _db.Users.Add(user);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index", "Home");  
+        }
+
+       
     }
 }
