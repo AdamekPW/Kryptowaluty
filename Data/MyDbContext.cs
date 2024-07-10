@@ -16,9 +16,10 @@ public class MyDbContext : DbContext
 	public DbSet<User> Users { get; set; }	
 	public DbSet<Role> Roles { get; set; }
 	
+	public DbSet<Wallet> Wallets { get; set; }	
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		// Konfiguracja klucza głównego dla CurrencyHistory (date + CurrencyId)
+		// Currency history primary key
 		modelBuilder.Entity<CurrencyHistory>()
 			.HasKey(ch => new { ch.Date, ch.CurrencyId });
 
@@ -35,6 +36,33 @@ public class MyDbContext : DbContext
 			.WithMany()
 			.HasForeignKey(u => u.RoleId)
 			.IsRequired();
+
+		// Wallet primary key
+		modelBuilder.Entity<Wallet>()
+			.HasKey(W => W.UserId);
+
+		// 1:1 configuration between Wallet and User
+		modelBuilder.Entity<Wallet>()
+			.HasOne(W => W.User)
+			.WithOne(U => U.Wallet)
+			.HasForeignKey<Wallet>(w => w.UserId)
+			.IsRequired();
+
+		// WalletCurrencyValue primary key
+		modelBuilder.Entity<WalletCurrencyValue>()
+			.HasKey(WCV => new { WCV.UserId, WCV.CurrencyId });
+
+		// 1:N configuration between Wallet and WalletCurrencyValue
+		modelBuilder.Entity<WalletCurrencyValue>()
+			.HasOne(WCV => WCV.Wallet)
+			.WithMany(W => W.WalletCurrencyValue)
+			.HasForeignKey(WCV => WCV.UserId);
+
+		// 1:N configuration between Currency and WalletCurrencyValue
+		modelBuilder.Entity<WalletCurrencyValue>()
+			.HasOne(WCV => WCV.Currency)
+			.WithMany(C => C.WalletCurrencyValues)
+			.HasForeignKey(WCV => WCV.CurrencyId);
 
 
 		base.OnModelCreating(modelBuilder);

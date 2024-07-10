@@ -46,5 +46,6 @@ public partial class Currency
 	public int Measurement { get; set; }
 
 
-
+	//nav properties
+	public IEnumerable<WalletCurrencyValue> WalletCurrencyValues { get; set; } = null!;
 }

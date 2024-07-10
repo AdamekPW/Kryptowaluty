@@ -36,6 +36,7 @@ public partial class User
 
     public Role Role { get; set; } = null!;
 
+    public Wallet Wallet { get; set; } = null!;
     public static string CreateSHA256Hash(string Password)
     {
         using (SHA256 sha256Hash = SHA256.Create())
