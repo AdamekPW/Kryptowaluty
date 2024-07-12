@@ -7,7 +7,7 @@ public partial class WalletCurrencyValue
 {
 	[Required]
 	[Column(TypeName = "decimal(20, 10)")]
-	public decimal Value;
+	public decimal Value { get; set; }
 
 	[Required]
 	public int UserId { get; set; }

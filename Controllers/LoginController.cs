@@ -40,8 +40,8 @@ namespace ASP_.NET_nauka.Controllers
             if (User != null)
             {
                 List<Claim> claims = new List<Claim>() {
-                    new Claim(ClaimTypes.NameIdentifier, loginTemplate.Email),
-                    new Claim("OtherProperties", "Example Role")
+                    new Claim(ClaimTypes.NameIdentifier, User.Id.ToString()),
+                    new Claim(ClaimTypes.Name, User.FirstName)
                 };
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, 

@@ -30,12 +30,12 @@ public class DataUpdater : BackgroundService
             UpdateDatabase(dbContext);
 			while (!stoppingToken.IsCancellationRequested)
 			{
-				/*await UpdateCurrencies(dbContext);
-				CalculateChange(dbContext);*/
+				await UpdateCurrencies(dbContext);
+				CalculateChange(dbContext);
 				IEnumerable<Currency> currencies = dbContext.Currencies.ToList();
 				await _hubContext.Clients.All.SendAsync("ReceiveCurrencies", currencies);
                 Console.WriteLine("----------DBUpdate----------");
-				await Task.Delay(TimeSpan.FromSeconds(6), stoppingToken);
+				await Task.Delay(TimeSpan.FromSeconds(120), stoppingToken);
 			}
 		}
 		
@@ -152,6 +152,7 @@ public class DataUpdater : BackgroundService
 					Entity.Measurement = 1;
 					Entity.Date = DateTime.Now;
 					Console.WriteLine("New history record created");
+					//Console.ReadLine();
 				}
 
 			} else

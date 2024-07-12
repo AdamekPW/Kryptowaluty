@@ -2,11 +2,35 @@
 <div class="mainContainer">
 	
 	<div class="menuContainer">
-		<button> Wallet </button>
-		<button> History </button>
-		<button> Settings </button>
+		<button class="m1" id="WalletButton"> Wallet </button>
+		<button class="m1" id="HistoryButton"> History </button>
+		<button class="m1" id="SettingsButton"> Settings </button>
 	</div>
-	<div class="spaceContainer">
+	<div class="spaceContainer" id="spaceContainer">
 		<p></p>
 	</div>
 </div>
+
+@section Scripts {
+
+	<script>
+		$(document).ready(function () {
+			$('#WalletButton').click(function () {
+				$('.m1').removeClass('buttonClickedStyle');
+				$(this).addClass('buttonClickedStyle');
+				$('#spaceContainer').load("/User/WalletPartial");
+
+			});
+			$('#HistoryButton').click(function () {
+				$('.m1').removeClass('buttonClickedStyle');
+				$(this).addClass('buttonClickedStyle');
+				$('#spaceContainer').load("/User/HistoryPartial");
+			});
+			$('#SettingsButton').click(function () {
+				$('.m1').removeClass('buttonClickedStyle');
+				$(this).addClass('buttonClickedStyle');
+				$('#spaceContainer').load("/User/SettingsPartial");
+			});
+		})
+	</script>
+}

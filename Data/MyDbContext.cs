@@ -6,17 +6,18 @@ namespace ASP_.NET_nauka.Data;
 
 public class MyDbContext : DbContext
 {
-    public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
-    {
-        
-    }
+	public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
+	{
 
-    public DbSet<Currency> Currencies { get; set; }
-    public DbSet<CurrencyHistory> CurrenciesHistory { get; set; }
-	public DbSet<User> Users { get; set; }	
+	}
+
+	public DbSet<Currency> Currencies { get; set; }
+	public DbSet<CurrencyHistory> CurrenciesHistory { get; set; }
+	public DbSet<User> Users { get; set; }
 	public DbSet<Role> Roles { get; set; }
-	
-	public DbSet<Wallet> Wallets { get; set; }	
+
+	public DbSet<Wallet> Wallets { get; set; }
+	public DbSet<WalletCurrencyValue> WalletCurrencyValues { get; set; }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		// Currency history primary key
