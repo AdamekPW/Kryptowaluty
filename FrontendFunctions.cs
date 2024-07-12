@@ -1,4 +1,5 @@
 ﻿using ASP_.NET_nauka.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json.Linq;
 
 namespace ASP_.NET_nauka;
@@ -14,6 +15,12 @@ public class FrontendFunctions
 			default: return Math.Round(number, 4);
 		}
 
+	}
+
+	public static decimal CalculateTotalEquity(WalletPackage WP)
+	{
+		decimal totalEquity = WP.CurrenciesValues.Sum(x => x.Value * x.currency.Value);
+		return totalEquity;
 	}
 }
 

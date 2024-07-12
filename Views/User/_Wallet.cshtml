@@ -1,22 +1,44 @@
 ﻿@model WalletPackage
-<h1>@Model.Wallet.UserId</h1>
 
-<table>
+<link rel="stylesheet" href="~/css/Currencies.css" />
+<link rel="stylesheet" href="~/css/Wallet.css" />
+
+
+<div class="tableContainer">
+	<div class="totalBalanceContainer">
+		<div></div>
+		<div class="BalanceBox"> Total Equity: @Math.Round(FrontendFunctions.CalculateTotalEquity(Model), 4) USD </div>
+	</div>
+
+	<table class="table table-bordered" style="width:100%">
 	<thead>
-		<tr>
-			<th> Value </th>
-			<th> </th>
-			<th> </th>
+		<tr style="background-color: yellowgreen">
+			<th> Code </th>
+			<th> Equity (USD)</th>
+			<th> Balance </th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			@if (Model.CurrenciesValues != null)
-			foreach (var curr in Model.CurrenciesValues)
-			{
-					
-			}
-		</tr>
+		
+		@if (Model.CurrenciesValues != null)
+		foreach (var CurAndVal in Model.CurrenciesValues)
+		{
+			<tr>
+				<td> 
+				<div class="CodeField">
+					<img src=@($"/images/Icons/{CurAndVal.currency.Id}.svg") style="margin-right: 2px" />
+					<div class="CodeSubField">
+						<div style="font-size: x-large; font-weight: 500;">
+							@CurAndVal.currency.Code </div>
+						<div style="font-size: small; ">@CurAndVal.currency.Name </div>
+					</div>
+				</div>
+				</td>	
+				<td> @Math.Round((CurAndVal.Value * CurAndVal.currency.Value), 2).ToString().Replace(',', '.')</td>
+				<td> @Math.Round(CurAndVal.Value, 3).ToString().Replace(',', '.') </td>
+			</tr>
+		}
 	</tbody>
 
-</table>
+	</table>
+</div>

@@ -1,0 +1,49 @@
+﻿.totalBalanceContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+.BalanceBox {
+    padding: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: 600;
+    font-size: 25px;
+    
+}
+
+.tableContainer {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+table tr {
+    color: #464742;
+}
+table tr:nth-child(even) {
+    background-color: #d5f59f; /* Kolor dla parzystych wierszy */
+}
+
+table tr:nth-child(odd) {
+    background-color: #e5fac3; /* Kolor dla nieparzystych wierszy */
+}
+
+.CodeField{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.CodeField img {
+    width: 38px;
+}
+
+
+.CodeSubField{
+    display: flex;
+    flex-direction: column;
+    margin-left: 6px;
+}

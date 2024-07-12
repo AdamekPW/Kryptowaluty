@@ -6,7 +6,7 @@ namespace ASP_.NET_nauka.Models;
 public class WalletPackage
 {
 	public Wallet Wallet { get; set; }
-	public IEnumerable<(Currency currency, decimal Value)> CurrenciesValues { get; set; }
+	public IEnumerable<(Currency currency, decimal Value)>? CurrenciesValues { get; set; }
 
 	public WalletPackage(Wallet wallet, MyDbContext _db)
 	{
