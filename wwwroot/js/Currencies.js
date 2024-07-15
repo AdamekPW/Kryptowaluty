@@ -28,12 +28,17 @@ connection.on("ReceiveCurrencies", function (currencies) {
         let id24Low = row.insertCell(2);
         let id24High = row.insertCell(3);
         let idChange = row.insertCell(4);
-        var img = document.createElement("img");
-        img.src = "/images/Icons/" + currency.id + ".svg";
-        img.width = 17;
-        img.style.marginRight = "6px";
-        idCurrency.appendChild(img);
-        idCurrency.appendChild(document.createTextNode(currency.code));
+
+        var linkElement = document.createElement('a');
+        linkElement.className = 'tradeLink';
+        linkElement.href = '/Trade/' + currency.id;
+        var img = document.createElement('img');
+        img.src = '/images/Icons/' + currency.id + '.svg';
+        img.width = 26;
+        img.style.marginRight = '8px';
+        linkElement.appendChild(img);
+        linkElement.appendChild(document.createTextNode(currency.code));
+        idCurrency.appendChild(linkElement);
         
         idValue.textContent = FixValue(currency.value);
         id24Low.textContent = FixValue(currency.low);

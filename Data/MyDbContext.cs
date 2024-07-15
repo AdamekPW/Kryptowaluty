@@ -1,11 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ASP_.NET_nauka.Models;
 using System.Reflection.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace ASP_.NET_nauka.Data;
 
 public class MyDbContext : DbContext
 {
+	/*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	{
+		string connectionString = "Server = (localdb)\\MSSQLLocalDB; Initial Catalog = DataBases; Integrated Security = True";
+		optionsBuilder.UseSqlServer(connectionString);
+	}*/
 	public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
 	{
 
@@ -20,14 +26,14 @@ public class MyDbContext : DbContext
 	public DbSet<WalletCurrencyValue> WalletCurrencyValues { get; set; }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		// Currency history primary key
+		// CurrencyHistory primary key
 		modelBuilder.Entity<CurrencyHistory>()
 			.HasKey(ch => new { ch.Date, ch.CurrencyId });
 
 		// 1:N configuration between Currency and CurrencyHistory
 		modelBuilder.Entity<CurrencyHistory>()
 			.HasOne(ch => ch.Currency)
-			.WithMany() 
+			.WithMany(c => c.CurrenciesHistories) 
 			.HasForeignKey(ch => ch.CurrencyId)
 			.IsRequired();
 

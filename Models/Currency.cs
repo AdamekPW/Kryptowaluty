@@ -38,14 +38,8 @@ public partial class Currency
 	[Required]
 	public DateTime Date { get; set; }
 
-	[Column(TypeName = "decimal(38, 10)")]
-	[Range(0, double.MaxValue, ErrorMessage = "Sum must be non-negative.")]
-	public decimal Sum { get; set; }
-
-	[Range(0, int.MaxValue, ErrorMessage = "Measurement must be non-negative.")]
-	public int Measurement { get; set; }
-
 
 	//nav properties
 	public IEnumerable<WalletCurrencyValue> WalletCurrencyValues { get; set; } = null!;
+	public IEnumerable<CurrencyHistory> CurrenciesHistories { get; set; } = null!;
 }

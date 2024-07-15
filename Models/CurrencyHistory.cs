@@ -13,24 +13,31 @@ public partial class CurrencyHistory
 	[StringLength(30)]
 	public string CurrencyId { get; set; } = null!;
 
-	public Currency Currency { get; set; } = null!;
 
 	[Required]
 	[Column(TypeName = "decimal(20, 10)")]
-	[Range(0, double.MaxValue, ErrorMessage = "Low must be non-negative.")]
+	[Range(0, double.MaxValue, ErrorMessage = "Low value must be non-negative.")]
 	public decimal Low { get; set; }
 
 	[Required]
 	[Column(TypeName = "decimal(20, 10)")]
-	[Range(0, double.MaxValue, ErrorMessage = "High must be non-negative.")]
+	[Range(0, double.MaxValue, ErrorMessage = "High value must be non-negative.")]
 	public decimal High { get; set; }
+
 
 	[Required]
 	[Column(TypeName = "decimal(20, 10)")]
-	[Range(0, double.MaxValue, ErrorMessage = "A must be non-negative.")]
-	public decimal AvgValue { get; set; }
+	[Range(0, double.MaxValue, ErrorMessage = "Open value must be non-negative.")]
+	public decimal Open { get; set; }
+
+	[Required]
+	[Column(TypeName = "decimal(20, 10)")]
+	[Range(0, double.MaxValue, ErrorMessage = "Close value must be non-negative.")]
+	public decimal Close { get; set; }
 
 
-	
+	//nav properties
+	public Currency Currency { get; set; } = null!;
+
 }
 

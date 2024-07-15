@@ -18,7 +18,11 @@
 			@foreach (var currency in Model)
 			{
 				<tr>
-					<td><img src=@($"/images/Icons/{currency.Id}.svg") width="17" style="margin-right: 2px" /> @currency.Code </td>
+					<td>
+						<a asp-controller="Trade" asp-action="Index" asp-route-currencyId=@currency.Id class="tradeLink">
+							<img src=@($"/images/Icons/{currency.Id}.svg") width="26" style="margin-right: 2px" /> @currency.Code
+						</a>
+					</td>
 					<td>@FrontendFunctions.Make5Digits(currency.Value).ToString().Replace(',', '.') </td>
 					<td>@FrontendFunctions.Make5Digits(currency.Low).ToString().Replace(',', '.')</td>
 					<td>@FrontendFunctions.Make5Digits(currency.High).ToString().Replace(',', '.') </td>
