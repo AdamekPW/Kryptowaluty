@@ -16,8 +16,8 @@ connection.on("ReceiveCurrencies", function (currencies) {
         let idChange = row.insertCell(2);
         var img = document.createElement("img");
         img.src = "/images/Icons/" + currency.id + ".svg";
-        img.width = 17;
-        img.style.marginRight = "6px";
+        img.width = 25;
+        img.style.marginRight = "8px";
 
         idCurrency.appendChild(img);
         idCurrency.appendChild(document.createTextNode(currency.code));

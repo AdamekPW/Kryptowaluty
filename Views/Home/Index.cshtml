@@ -44,7 +44,7 @@
 							@foreach (var currency in SortedModel)
 							{
 								<tr>
-									<td><img src=@($"/images/Icons/{currency.Id}.svg") width="17" style="margin-right: 2px" /> @currency.Code </td>
+									<td><img src=@($"/images/Icons/{currency.Id}.svg") width="25"  /> @currency.Code </td>
 									<td>@FrontendFunctions.Make5Digits(currency.Value).ToString().Replace(',', '.') </td>
 									@if (currency.Change > 0)
 									{

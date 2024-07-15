@@ -8,7 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\Trade.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\SignUp.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\Trade.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +35,10 @@
   <ItemGroup>
     <Folder Include="Server\" />
     <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\Trade.js" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ASP_.NET_nauka.Models;
 
@@ -40,6 +41,8 @@ public partial class Currency
 
 
 	//nav properties
+	[JsonIgnore]
 	public IEnumerable<WalletCurrencyValue> WalletCurrencyValues { get; set; } = null!;
+	[JsonIgnore]
 	public IEnumerable<CurrencyHistory> CurrenciesHistories { get; set; } = null!;
 }

@@ -12,9 +12,38 @@ public class TradeController : Controller
 		_db = db;
 	}
 
-	[Route("trade/{currencyId}")]
-	public IActionResult Index(Currency currencyId)
+	[Route("Trade/{currencyId}")]
+	public IActionResult Index(string currencyId)
 	{
-		return View();
+		Currency? currency = _db.Currencies.Where(x => x.Id == currencyId).FirstOrDefault();
+		if (currency == null)
+		{
+			return RedirectToAction("Index", "Home");
+		}
+        
+		TradeChartPackage package = new TradeChartPackage();
+		package.Currency = currency;
+
+		package.CurrencyHistory = _db.CurrenciesHistory
+			.Where(x => x.CurrencyId == currencyId)
+			.OrderBy(x => x.Date)
+			.ToList();
+
+		var item = package.CurrencyHistory[0];
+        item.Open = FrontendFunctions.Make5Digits(item.Open);
+        item.Low = FrontendFunctions.Make5Digits(item.Close);
+        item.High = FrontendFunctions.Make5Digits(item.High);
+        item.Close = FrontendFunctions.Make5Digits(item.Close);
+        for (int i = 1; i < package.CurrencyHistory.Count; i++)
+		{
+			item = package.CurrencyHistory[i];
+			item.Open = FrontendFunctions.Make5Digits(package.CurrencyHistory[i - 1].Close);
+            item.Low = FrontendFunctions.Make5Digits(item.Low);
+            item.High = FrontendFunctions.Make5Digits(item.High);
+            item.Close = FrontendFunctions.Make5Digits(item.Close);
+        }
+
+
+		return View(package);
 	}
 }

@@ -32,12 +32,12 @@ public class DataUpdater :BackgroundService
 			UpdateDatabase(dbContext);
 			while (!stoppingToken.IsCancellationRequested)
 			{
-				/*await UpdateCurrencies(dbContext);
-				CalculateChange(dbContext);*/
+				await UpdateCurrencies(dbContext);
+				CalculateChange(dbContext);
 				IEnumerable<Currency> currencies = dbContext.Currencies.ToList();
 				await _hubContext.Clients.All.SendAsync("ReceiveCurrencies", currencies);
 				Console.WriteLine("----------DBUpdate----------");
-				await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
+				await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
 			}
 		}
 
@@ -139,6 +139,7 @@ public class DataUpdater :BackgroundService
 
 					decimal CurLow = decimal.MaxValue;
 					decimal CurHigh = decimal.MinValue;
+					
 					
 					decimal Open = decimal.Parse(Prices[Day*24].Item2);
 					decimal Close = decimal.Parse(Prices[Day * 24 + 23].Item2);

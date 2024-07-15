@@ -1,1 +1,29 @@
-﻿
+﻿@model TradeChartPackage
+
+<link rel="stylesheet" href="~/css/Trade.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@latest/dist/apexcharts.css">
+
+<div class="TradeMainContainer">
+	<h1> @Model.Currency.Name </h1>
+    <div id="chart"> </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@latest/dist/apexcharts.min.js"> </script>
+<script> 
+
+	var Cur = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+    //console.log(Cur);
+    const CandleData = [];
+    Cur.CurrencyHistory.forEach(item => {
+        CandleData.push({
+            x: new Date(item.Date).getTime(),
+            y: [item.Open, item.High, item.Low, item.Close]
+        })
+       
+    })
+    
+    
+</script>
+<script src="~/js/Trade.js"> </script>
+
