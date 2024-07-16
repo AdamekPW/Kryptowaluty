@@ -10,14 +10,16 @@ using Newtonsoft.Json.Linq;
 using OfficeOpenXml;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-public class DataUpdater :BackgroundService
+public class DataUpdater : BackgroundService
 {
 	private readonly IServiceProvider _serviceProvider;
 	private readonly IHubContext<CurrenciesHub> _hubContext;
-	public DataUpdater(IServiceProvider serviceProvider, IHubContext<CurrenciesHub> hubContext)
+	private readonly HttpClient _httpClient;
+	public DataUpdater(IServiceProvider serviceProvider, IHubContext<CurrenciesHub> hubContext, HttpClient httpClient)
 	{
 		_serviceProvider = serviceProvider;
 		_hubContext = hubContext;
+		_httpClient = httpClient;
 	}
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
@@ -32,52 +34,50 @@ public class DataUpdater :BackgroundService
 			UpdateDatabase(dbContext);
 			while (!stoppingToken.IsCancellationRequested)
 			{
-				await UpdateCurrencies(dbContext);
+				await UpdateCurrencies(dbContext, _httpClient);
 				CalculateChange(dbContext);
 				IEnumerable<Currency> currencies = dbContext.Currencies.ToList();
 				await _hubContext.Clients.All.SendAsync("ReceiveCurrencies", currencies);
 				Console.WriteLine("----------DBUpdate----------");
-				await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
+				await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
 			}
 		}
 
 	}
-	public static async Task UpdateCurrencies(MyDbContext _db)
+	public static async Task UpdateCurrencies(MyDbContext _db, HttpClient client)
 	{
 		List<string> CurrenciesIDs = _db.Currencies.Select(x => x.Id).ToList();
-
-		using (var client = new HttpClient())
+		
+		string url = "https://api.coingecko.com/api/v3/simple/price?ids=" + string.Join(",", CurrenciesIDs) + "&vs_currencies=usd";
+		var data = client.GetAsync(url).Result;
+		if (data.IsSuccessStatusCode)
 		{
-			string url = "https://api.coingecko.com/api/v3/simple/price?ids=" + string.Join(",", CurrenciesIDs) + "&vs_currencies=usd";
-			var data = client.GetAsync(url).Result;
-			if (data.IsSuccessStatusCode)
+			string json = await data.Content.ReadAsStringAsync();
+			dynamic? jsonObject = JsonConvert.DeserializeObject(json);
+			if (jsonObject == null)
 			{
-				string json = await data.Content.ReadAsStringAsync();
-				dynamic? jsonObject = JsonConvert.DeserializeObject(json);
-				if (jsonObject == null)
-				{
-					Console.WriteLine("Data is null");
-					return;
-				}
-				Console.WriteLine(jsonObject);
-				foreach (Currency currency in _db.Currencies)
-				{
-					decimal NewValue = decimal.Parse(jsonObject[currency.Id]["usd"].ToString());
-					currency.Value = NewValue;
-					if (currency.Low > NewValue || currency.Low == 0) currency.Low = NewValue;
-					if (currency.High < NewValue) currency.High = NewValue;
-					currency.Date = DateTime.Now;
-				}
-
-				//Console.WriteLine(decimal.Parse(jsonObject[Id]["usd"].ToString()));
-
-				_db.SaveChanges();
+				Console.WriteLine("Data is null");
+				return;
 			}
-			else
+			Console.WriteLine(jsonObject);
+			foreach (Currency currency in _db.Currencies)
 			{
-				Console.WriteLine("Data error");
+				decimal NewValue = decimal.Parse(jsonObject[currency.Id]["usd"].ToString());
+				currency.Value = NewValue;
+				if (currency.Low > NewValue || currency.Low == 0) currency.Low = NewValue;
+				if (currency.High < NewValue) currency.High = NewValue;
+				currency.Date = DateTime.Now;
 			}
+
+			//Console.WriteLine(decimal.Parse(jsonObject[Id]["usd"].ToString()));
+
+			_db.SaveChanges();
 		}
+		else
+		{
+			Console.WriteLine("Data error");
+		}
+		
 	}
 	
 	private static (string, string) GetCurrencyNameAndCodeById(string Currency)
@@ -108,71 +108,68 @@ public class DataUpdater :BackgroundService
 		return ("", "");
 	}
 	
-
-	public static async Task CreateCurrencyHistory(string CurrencyID, int Days, MyDbContext _db)
+	public static async Task CreateCurrencyHistory(string CurrencyID, int Days, MyDbContext _db, HttpClient client)
 	{
-		using (var client = new HttpClient()) 
+		string url = $"https://api.coingecko.com/api/v3/coins/{CurrencyID}/market_chart?vs_currency=usd&days={Days}";
+		var data = client.GetAsync(url).Result;
+		if (data.IsSuccessStatusCode)
 		{
-			string url = $"https://api.coingecko.com/api/v3/coins/{CurrencyID}/market_chart?vs_currency=usd&days={Days}";
-			var data = client.GetAsync(url).Result;
-			if (data.IsSuccessStatusCode)
-			{
-				string json = await data.Content.ReadAsStringAsync();
-				dynamic? jsonObject = JsonConvert.DeserializeObject(json);
-				JArray prices = jsonObject["prices"];
-				List<(string, string)> Prices = prices.Select(x => ( x[0].ToString(), x[1].ToString())).ToList();
+			string json = await data.Content.ReadAsStringAsync();
+			dynamic? jsonObject = JsonConvert.DeserializeObject(json);
+			JArray prices = jsonObject["prices"];
+			List<(string, string)> Prices = prices.Select(x => ( x[0].ToString(), x[1].ToString())).ToList();
 				
-				for (int Day = 0; Day < Days; Day++)
+			for (int Day = 0; Day < Days; Day++)
+			{
+				DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(Prices[Day*24].Item1));
+				string date = dateTimeOffset.ToString("yyyy-MM-dd");
+
+				var NewestHistoryRecordDate = (_db.CurrenciesHistory
+					.Where(x => x.CurrencyId == CurrencyID)
+					.Max(x => x.Date)).Date;
+				if (NewestHistoryRecordDate == DateTime.Parse(date))
 				{
-					DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(Prices[Day*24].Item1));
-					string date = dateTimeOffset.ToString("yyyy-MM-dd");
-
-					var NewestHistoryRecordDate = (_db.CurrenciesHistory
-						.Where(x => x.CurrencyId == CurrencyID)
-						.Max(x => x.Date)).Date;
-					if (NewestHistoryRecordDate == DateTime.Parse(date))
-					{
-						Console.WriteLine("API not available yet");
-						return;
-					}
-
-
-					decimal CurLow = decimal.MaxValue;
-					decimal CurHigh = decimal.MinValue;
-					
-					
-					decimal Open = decimal.Parse(Prices[Day*24].Item2);
-					decimal Close = decimal.Parse(Prices[Day * 24 + 23].Item2);
-					for (int Hour = 0; Hour < 24; Hour++)
-					{
-						int index = Day * 24 + Hour;
-						decimal _price = decimal.Parse(Prices[index].Item2);
-						
-						if (_price < CurLow) CurLow = _price;
-						if (_price > CurHigh) CurHigh = _price;
-					}
-					
-					CurrencyHistory currencyHistory = new CurrencyHistory();
-					currencyHistory.CurrencyId = CurrencyID;
-					currencyHistory.Low = CurLow;	
-					currencyHistory.High = CurHigh;
-					currencyHistory.Open = Open;
-					currencyHistory.Close = Close;
-					currencyHistory.Date = DateTime.Parse(date);
-					_db.CurrenciesHistory.Add(currencyHistory);
+					Console.WriteLine("API not available yet");
+					return;
 				}
 
-				_db.SaveChanges();
+
+				decimal CurLow = decimal.MaxValue;
+				decimal CurHigh = decimal.MinValue;
+					
+					
+				decimal Open = decimal.Parse(Prices[Day*24].Item2);
+				decimal Close = decimal.Parse(Prices[Day * 24 + 23].Item2);
+				for (int Hour = 0; Hour < 24; Hour++)
+				{
+					int index = Day * 24 + Hour;
+					decimal _price = decimal.Parse(Prices[index].Item2);
+						
+					if (_price < CurLow) CurLow = _price;
+					if (_price > CurHigh) CurHigh = _price;
+				}
+					
+				CurrencyHistory currencyHistory = new CurrencyHistory();
+				currencyHistory.CurrencyId = CurrencyID;
+				currencyHistory.Low = CurLow;	
+				currencyHistory.High = CurHigh;
+				currencyHistory.Open = Open;
+				currencyHistory.Close = Close;
+				currencyHistory.Date = DateTime.Parse(date);
+				_db.CurrenciesHistory.Add(currencyHistory);
+			}
+
+			_db.SaveChanges();
 				
-			}
-			else
-			{
-				throw new Exception("Error: something wrong with data");
-			}
 		}
+		else
+		{
+			throw new Exception("Error: something wrong with data");
+		}
+		
 	}
 
-	public static void UpdateDatabase(MyDbContext _db)
+	public void UpdateDatabase(MyDbContext _db)
 	{
 		var CurrencyIDs = _db.Currencies.Select(x => x.Id).ToList();
 	
@@ -186,7 +183,7 @@ public class DataUpdater :BackgroundService
 			if (DifferenceInDays > 1)
 			{
 				
-				CreateCurrencyHistory(currencyID, DifferenceInDays - 1, _db).Wait();
+				CreateCurrencyHistory(currencyID, DifferenceInDays - 1, _db, _httpClient).Wait();
 				Console.WriteLine($"Created {DifferenceInDays - 1} days history for {currencyID}");
 				Task.Delay(15000).Wait();
 			}

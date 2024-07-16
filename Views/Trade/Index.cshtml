@@ -4,9 +4,33 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@latest/dist/apexcharts.css">
 
 <div class="TradeMainContainer">
-	<h1> @Model.Currency.Name </h1>
-    <div id="chart"> </div>
+    <div class="TradeChartContainer">
+        <div id="TradeUpbarContainer">
+           
+        </div>
+        <div id="chart"> </div>
+    </div>
+    <div class="Trade">
+        <div class="TradeOrderBook">
+            <div class="TradeOrderBookPart" id="Sell">
+               
+        
+            </div>
+            <div class="TradeOrderBookPart" id="Buy"
+
+            </div>
+
+        </div>
+        <div class="TradeUser">
+        </div>
+    </div>
+
 </div>
+
+
+
+
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest/dist/apexcharts.min.js"> </script>
@@ -25,5 +49,6 @@
     
     
 </script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/Trade.js"> </script>
 
