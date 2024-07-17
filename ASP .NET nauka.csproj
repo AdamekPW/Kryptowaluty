@@ -9,11 +9,13 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\Trade.js" />
+    <Content Remove="wwwroot\js\TradeUser.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\SignUp.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\Trade.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\TradeUser.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +41,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\js\Trade.js" />
+    <None Include="wwwroot\js\TradeUser.js" />
   </ItemGroup>
 
 </Project>

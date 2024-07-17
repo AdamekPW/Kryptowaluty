@@ -13,21 +13,56 @@
     <div class="Trade">
         <div class="TradeOrderBook">
             <div class="TradeOrderBookPart" id="Sell">
-               
-        
+
             </div>
-            <div class="TradeOrderBookPart" id="Buy"
+            <div class="TradeOrderBookPart" id="Buy">
 
             </div>
 
         </div>
         <div class="TradeUser">
+            <br />
+            <div style="display: flex;">
+                <label class="switch">
+                    <input id="BuySellSwitch" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                <p style="margin-left: 30px" id="AvailableBalanceBox"> Available balance: </p>
+            </div>
+
+            <div id="BuySellForm">
+
+
+            </div>
+
         </div>
     </div>
 
 </div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var curId = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Currency.Id));
+            $('#BuySellForm').load("/Trade/" + curId + "/Buy");
 
+            $('#BuySellSwitch').change(function () {
+
+                if ($(this).is(':checked')) {
+                    (function () {
+                        $('#BuySellForm').empty();
+                        $('#BuySellForm').load("/Trade/" + curId + "/Sell");
+                    })();
+                } else {
+                    (function() {
+                        $('#BuySellForm').empty();
+                        $('#BuySellForm').load("/Trade/" + curId + "/Buy");
+                    }) ();
+                }
+            });
+        });
+    </script>
+}
 
 
 
@@ -37,7 +72,6 @@
 <script> 
 
 	var Cur = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
-    //console.log(Cur);
     const CandleData = [];
     Cur.CurrencyHistory.forEach(item => {
         CandleData.push({
@@ -46,6 +80,12 @@
         })
        
     })
+    
+    const AvailableBalanceBox = document.getElementById('AvailableBalanceBox');
+
+    var UserBalance = Cur.WalletCurrencyValue.Value;
+    var Code = Cur.Currency.Code;
+    AvailableBalanceBox.textContent = 'Available balance: ' + UserBalance + ' ' + Code;
     
     
 </script>

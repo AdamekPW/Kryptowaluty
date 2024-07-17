@@ -21,9 +21,11 @@ public class MyDbContext : DbContext
 	public DbSet<CurrencyHistory> CurrenciesHistory { get; set; }
 	public DbSet<User> Users { get; set; }
 	public DbSet<Role> Roles { get; set; }
-
 	public DbSet<Wallet> Wallets { get; set; }
 	public DbSet<WalletCurrencyValue> WalletCurrencyValues { get; set; }
+	public DbSet<ActiveOrder> ActiveOrders { get; set; }
+	public DbSet<CompletedOrder> CompletedOrders { get; set; }
+
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		// CurrencyHistory primary key
@@ -71,8 +73,32 @@ public class MyDbContext : DbContext
 			.WithMany(C => C.WalletCurrencyValues)
 			.HasForeignKey(WCV => WCV.CurrencyId);
 
+		// 1:N configuration between User and ActiveOrder
+		modelBuilder.Entity<ActiveOrder>()
+			.HasOne(AO => AO.User)
+			.WithMany(U => U.ActiveOrders)
+			.HasForeignKey(AO => AO.UserId);
 
-		base.OnModelCreating(modelBuilder);
+        // 1:N configuration between Currency and ActiveOrder
+        modelBuilder.Entity<ActiveOrder>()
+            .HasOne(AO => AO.Currency)
+            .WithMany(C => C.ActiveOrders)
+            .HasForeignKey(AO => AO.CurrencyId);
+
+        // 1:N configuration between User and CompletedOrder
+        modelBuilder.Entity<CompletedOrder>()
+            .HasOne(CO => CO.User)
+            .WithMany(U => U.CompletedOrders)
+            .HasForeignKey(CO => CO.UserId);
+
+        // 1:N configuration between Currency and CompletedOrder
+        modelBuilder.Entity<CompletedOrder>()
+            .HasOne(CO => CO.Currency)
+            .WithMany(C => C.CompletedOrders)
+            .HasForeignKey(CO => CO.CurrencyId);
+
+
+        base.OnModelCreating(modelBuilder);
 	}
 }
 

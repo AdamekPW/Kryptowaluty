@@ -4,5 +4,6 @@ public partial class TradeChartPackage
 {
 	public Currency Currency { get; set; } = null!;
 	public List<CurrencyHistory> CurrencyHistory { get; set; } = null!;
+	public WalletCurrencyValue WalletCurrencyValue { get; set; } = null!;
 
 }

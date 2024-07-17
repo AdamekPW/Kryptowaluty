@@ -35,11 +35,11 @@
 .Trade {
     width: 40vw;
     background-color: transparent;
+    padding-left: 1vw;
 }
 
 .TradeOrderBook {
     width: 100%;
-    padding-left: 1vw;
     height: 40vh;
     display: flex;
     flex-direction: row;
@@ -56,8 +56,8 @@
         flex-direction: column;
         
         align-items: center;
-        overflow: scroll;
-    
+        overflow-y: scroll;
+        
     }
 
 #Sell {
@@ -73,5 +73,195 @@
 
 
 
-    .TradeUser {
+.TradeUser {
+    width: 100%;
+    background-color: transparent;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    
+    margin-top: 20px;
+    border-top: 5px solid black;
+}
+
+    .TradeUser form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
+
+    .TradeUser p {
+        font-size: larger;
+    }
+    .TradeUser input {
+        width: 15vw;
+        font-size: large;
+        border-right: none;
+        outline: none;
+    }
+
+    .TradeUser .inputRow {
+        width: 100%;
+        display: flex;
+        
+        flex-direction: row;
+        
+        margin-bottom: 10px;
+    }
+    .TradeUser .inputRow .inputContainer {
+        width: 50%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+    }
+
+    .TradeUser #ConfirmOrderButton {
+        background-color: limegreen;
+        color: white;
+        border: 2px solid transparent;
+        border-radius: 50px;
+        font-size: larger;
+        font-weight: 600;
+        margin-top: 5px;
+        width: 60%;
+    }
+    .TradeUser #sliderContainer {
+        width: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+
+    }
+    .TradeUser #sliderContainer span {
+        font-size: larger;
+        font-weight: 400;
+        width: 15%;
+        text-align: center;
+    }
+
+    .TradeUser #CurrentPriceButton{
+        width: 200px;
+        background-color: transparent;
+        border: 3px solid transparent;
+        border-radius: 10px;
+        font-size: larger;
+        margin-left: 10px;
+    }
+
+
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 70%;
+    height: 10px;
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+input[type="range"]:hover {
+    opacity: 1; 
+}
+
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 20px; 
+    height: 20px;
+    border-radius: 10px;
+    background: limegreen; 
+    cursor: pointer; 
+}
+
+    
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 36px;
+}
+
+ 
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: lightgreen;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "Buy";
+        color: white;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 36px;
+        width: 100px;
+        background-color: limegreen;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: #f2b2a5;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #ed917e;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(100px);
+    -ms-transform: translateX(100px);
+    transform: translateX(100px);
+    content: "Sell";
+    background-color: #fc5f3f;
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 34px;
+    }
+
+#USDTBox {
+    width: 4vw;
+   
+    border-left: none;
+    border-right: 2px solid black;
+    outline: none;
+}
+
+#CodeBox {
+    width: 4vw;
+    
+    border-left: none;
+    border-right: 2px solid black;
+    outline: none;
+}

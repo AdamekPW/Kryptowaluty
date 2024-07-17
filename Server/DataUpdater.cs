@@ -108,7 +108,7 @@ public class DataUpdater : BackgroundService
 		return ("", "");
 	}
 	
-	public static async Task CreateCurrencyHistory(string CurrencyID, int Days, MyDbContext _db, HttpClient client)
+	public static async Task<bool> CreateCurrencyHistory(string CurrencyID, int Days, MyDbContext _db, HttpClient client)
 	{
 		string url = $"https://api.coingecko.com/api/v3/coins/{CurrencyID}/market_chart?vs_currency=usd&days={Days}";
 		var data = client.GetAsync(url).Result;
@@ -130,7 +130,7 @@ public class DataUpdater : BackgroundService
 				if (NewestHistoryRecordDate == DateTime.Parse(date))
 				{
 					Console.WriteLine("API not available yet");
-					return;
+					return false;
 				}
 
 
@@ -167,6 +167,7 @@ public class DataUpdater : BackgroundService
 			throw new Exception("Error: something wrong with data");
 		}
 		
+		return true;
 	}
 
 	public void UpdateDatabase(MyDbContext _db)
@@ -182,8 +183,10 @@ public class DataUpdater : BackgroundService
 			int DifferenceInDays = (CurrentDate - NewestHistoryRecordDate).Days;
 			if (DifferenceInDays > 1)
 			{
-				
-				CreateCurrencyHistory(currencyID, DifferenceInDays - 1, _db, _httpClient).Wait();
+
+				Task<bool> CreateTask = CreateCurrencyHistory(currencyID, DifferenceInDays - 1, _db, _httpClient);
+				CreateTask.Wait();
+				if (!CreateTask.Result) return;
 				Console.WriteLine($"Created {DifferenceInDays - 1} days history for {currencyID}");
 				Task.Delay(15000).Wait();
 			}

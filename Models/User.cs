@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace ASP_.NET_nauka.Models;
@@ -34,9 +35,20 @@ public partial class User
     [Required]
     public int RoleId { get; set; }
 
+
+    //nav properties
+    [JsonIgnore]
     public Role Role { get; set; } = null!;
 
+    [JsonIgnore]
     public Wallet Wallet { get; set; } = null!;
+
+    [JsonIgnore]
+    public IEnumerable<ActiveOrder> ActiveOrders { get; set; } = null!;
+
+    [JsonIgnore]
+    public IEnumerable<CompletedOrder> CompletedOrders { get; set; } = null!;
+
     public static string CreateSHA256Hash(string Password)
     {
         using (SHA256 sha256Hash = SHA256.Create())

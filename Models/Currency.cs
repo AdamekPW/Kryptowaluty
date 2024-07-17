@@ -45,4 +45,10 @@ public partial class Currency
 	public IEnumerable<WalletCurrencyValue> WalletCurrencyValues { get; set; } = null!;
 	[JsonIgnore]
 	public IEnumerable<CurrencyHistory> CurrenciesHistories { get; set; } = null!;
+
+	[JsonIgnore]
+	public IEnumerable<ActiveOrder> ActiveOrders { get; set; } = null!;
+
+    [JsonIgnore]
+    public IEnumerable<CompletedOrder> CompletedOrders { get; set; } = null!;
 }

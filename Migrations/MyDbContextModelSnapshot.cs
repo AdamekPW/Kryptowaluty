@@ -22,6 +22,77 @@ namespace ASP_.NET_nauka.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ASP_.NET_nauka.Models.ActiveOrder", b =>
+                {
+                    b.Property<long>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("id"));
+
+                    b.Property<string>("CurrencyId")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("DateOfIssue")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Qty")
+                        .HasColumnType("decimal(20, 10)");
+
+                    b.Property<decimal>("QtyUSDT")
+                        .HasColumnType("decimal(20, 10)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ActiveOrders");
+                });
+
+            modelBuilder.Entity("ASP_.NET_nauka.Models.CompletedOrder", b =>
+                {
+                    b.Property<long>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("id"));
+
+                    b.Property<string>("CurrencyId")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("DateOfIssue")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Qty")
+                        .HasColumnType("decimal(20, 10)");
+
+                    b.Property<decimal>("QtyUSDT")
+                        .HasColumnType("decimal(20, 10)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CompletedOrders");
+                });
+
             modelBuilder.Entity("ASP_.NET_nauka.Models.Currency", b =>
                 {
                     b.Property<string>("Id")
@@ -45,16 +116,10 @@ namespace ASP_.NET_nauka.Migrations
                     b.Property<decimal>("Low")
                         .HasColumnType("decimal(20, 10)");
 
-                    b.Property<int>("Measurement")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
-
-                    b.Property<decimal>("Sum")
-                        .HasColumnType("decimal(38, 10)");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(20, 10)");
@@ -73,13 +138,16 @@ namespace ASP_.NET_nauka.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<decimal>("AvgValue")
+                    b.Property<decimal>("Close")
                         .HasColumnType("decimal(20, 10)");
 
                     b.Property<decimal>("High")
                         .HasColumnType("decimal(20, 10)");
 
                     b.Property<decimal>("Low")
+                        .HasColumnType("decimal(20, 10)");
+
+                    b.Property<decimal>("Open")
                         .HasColumnType("decimal(20, 10)");
 
                     b.HasKey("Date", "CurrencyId");
@@ -185,10 +253,48 @@ namespace ASP_.NET_nauka.Migrations
                     b.ToTable("WalletCurrencyValues");
                 });
 
+            modelBuilder.Entity("ASP_.NET_nauka.Models.ActiveOrder", b =>
+                {
+                    b.HasOne("ASP_.NET_nauka.Models.Currency", "Currency")
+                        .WithMany("ActiveOrders")
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ASP_.NET_nauka.Models.User", "User")
+                        .WithMany("ActiveOrders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ASP_.NET_nauka.Models.CompletedOrder", b =>
+                {
+                    b.HasOne("ASP_.NET_nauka.Models.Currency", "Currency")
+                        .WithMany("CompletedOrders")
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ASP_.NET_nauka.Models.User", "User")
+                        .WithMany("CompletedOrders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ASP_.NET_nauka.Models.CurrencyHistory", b =>
                 {
                     b.HasOne("ASP_.NET_nauka.Models.Currency", "Currency")
-                        .WithMany()
+                        .WithMany("CurrenciesHistories")
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -239,11 +345,21 @@ namespace ASP_.NET_nauka.Migrations
 
             modelBuilder.Entity("ASP_.NET_nauka.Models.Currency", b =>
                 {
+                    b.Navigation("ActiveOrders");
+
+                    b.Navigation("CompletedOrders");
+
+                    b.Navigation("CurrenciesHistories");
+
                     b.Navigation("WalletCurrencyValues");
                 });
 
             modelBuilder.Entity("ASP_.NET_nauka.Models.User", b =>
                 {
+                    b.Navigation("ActiveOrders");
+
+                    b.Navigation("CompletedOrders");
+
                     b.Navigation("Wallet")
                         .IsRequired();
                 });
