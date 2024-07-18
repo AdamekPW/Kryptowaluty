@@ -45,17 +45,25 @@
         $(document).ready(function () {
             var curId = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Currency.Id));
             $('#BuySellForm').load("/Trade/" + curId + "/Buy");
+            UserBalance = Cur.User.USDT_balance;
+            AvailableBalanceBox.textContent = 'Available balance: ' + UserBalance + ' USDT';
+
 
             $('#BuySellSwitch').change(function () {
 
                 if ($(this).is(':checked')) {
                     (function () {
                         $('#BuySellForm').empty();
+                        UserBalance = Cur.WalletCurrencyValue.Value;
+                        Code = Cur.Currency.Code;
+                        AvailableBalanceBox.textContent = 'Available balance: ' + UserBalance + ' ' + Code;
                         $('#BuySellForm').load("/Trade/" + curId + "/Sell");
                     })();
                 } else {
                     (function() {
                         $('#BuySellForm').empty();
+                        UserBalance = Cur.User.USDT_balance;
+                        AvailableBalanceBox.textContent = 'Available balance: ' + UserBalance + ' USDT';
                         $('#BuySellForm').load("/Trade/" + curId + "/Buy");
                     }) ();
                 }
@@ -84,8 +92,9 @@
     const AvailableBalanceBox = document.getElementById('AvailableBalanceBox');
 
     var UserBalance = Cur.WalletCurrencyValue.Value;
+    var UserUSDTBalance = Cur.User.USDT_balance;
     var Code = Cur.Currency.Code;
-    AvailableBalanceBox.textContent = 'Available balance: ' + UserBalance + ' ' + Code;
+    
     
     
 </script>

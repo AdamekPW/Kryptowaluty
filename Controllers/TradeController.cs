@@ -42,7 +42,20 @@ public class TradeController : Controller
 		return View(package);
 	}
 
+    /*[HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Buy()
+    {
+        return RedirectToAction("Index");
+    }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Sell()
+    {
+
+        return RedirectToAction("Index");
+    }*/
 
 	private TradeChartPackage CreatePackage(Currency currency)
 	{
@@ -75,6 +88,13 @@ public class TradeController : Controller
             package.WalletCurrencyValue = new WalletCurrencyValue(currency.Id);
             return package;
         }
+
+        var user = _db.Users.Where(x => x.Id == int.Parse(userId)).FirstOrDefault();
+        if (user != null)
+        {
+            package.User = user;
+        } 
+
         walletCurrencyValue = _db.WalletCurrencyValues
             .FirstOrDefault(x => x.UserId == int.Parse(userId)
             && x.CurrencyId == currency.Id);

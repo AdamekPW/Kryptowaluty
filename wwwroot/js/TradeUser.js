@@ -14,11 +14,6 @@ function AllowOnlyDecimal(e) {
     }
 }
 
-function CheckIfLessThanBalance() {
-    const CurrentValue = QtyInput.value;
-    if (CurrentValue > UserBalance) {
-        QtyInput.value = UserBalance;
-    }
-}
+
 
 

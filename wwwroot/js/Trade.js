@@ -39,7 +39,7 @@ function AddChange(base) {
     if (Cur.Currency.Change > 0) {
         header.innerText = ' +' + base.toFixed(2);
         header.style.color = 'green';
-    } else if (currency.change < 0) {
+    } else if (Cur.Currency.Change < 0) {
         header.innerText = ' ' + base.toFixed(2);
         header.style.color = 'red';
     } else {

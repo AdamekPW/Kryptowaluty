@@ -5,6 +5,7 @@ using ASP_.NET_nauka.Hubs;
 using ASP_.NET_nauka.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OfficeOpenXml;
@@ -31,7 +32,9 @@ public class DataUpdater : BackgroundService
 				throw new Exception("Service provider error");
 			}
 
-			UpdateDatabase(dbContext);
+			
+
+			await UpdateDatabase(dbContext);
 			while (!stoppingToken.IsCancellationRequested)
 			{
 				await UpdateCurrencies(dbContext, _httpClient);
@@ -124,14 +127,21 @@ public class DataUpdater : BackgroundService
 				DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(Prices[Day*24].Item1));
 				string date = dateTimeOffset.ToString("yyyy-MM-dd");
 
-				var NewestHistoryRecordDate = (_db.CurrenciesHistory
-					.Where(x => x.CurrencyId == CurrencyID)
-					.Max(x => x.Date)).Date;
-				if (NewestHistoryRecordDate == DateTime.Parse(date))
+				DateTime NewestHistoryRecordDate;
+                if (!_db.CurrenciesHistory.Where(x => x.CurrencyId == CurrencyID).IsNullOrEmpty())
 				{
-					Console.WriteLine("API not available yet");
-					return false;
-				}
+					NewestHistoryRecordDate = (_db.CurrenciesHistory
+						.Where(x => x.CurrencyId == CurrencyID)
+						.Max(x => x.Date)).Date;
+
+					if (NewestHistoryRecordDate == DateTime.Parse(date))
+					{
+						Console.WriteLine("API not available yet");
+						return false;
+					}
+
+				} 
+				
 
 
 				decimal CurLow = decimal.MaxValue;
@@ -170,13 +180,23 @@ public class DataUpdater : BackgroundService
 		return true;
 	}
 
-	public void UpdateDatabase(MyDbContext _db)
+	public async Task UpdateDatabase(MyDbContext _db)
 	{
 		var CurrencyIDs = _db.Currencies.Select(x => x.Id).ToList();
 	
 		DateTime CurrentDate = DateTime.Now.Date;
 		foreach (var currencyID in CurrencyIDs)
 		{
+			if (_db.CurrenciesHistory.Where(x => x.CurrencyId == currencyID).ToList().IsNullOrEmpty())
+			{
+				Console.WriteLine("starting");
+                Task<bool> CreateTask = CreateCurrencyHistory(currencyID, 90, _db, _httpClient);
+                CreateTask.Wait();
+                Console.WriteLine("ended");
+                Console.WriteLine($"Created 90 days history for {currencyID}");
+                Task.Delay(15000).Wait();
+				continue;
+            }
 			var NewestHistoryRecordDate = _db.CurrenciesHistory
 				.Where(x => x.CurrencyId == currencyID)
 				.Max(x => x.Date);
@@ -188,7 +208,7 @@ public class DataUpdater : BackgroundService
 				CreateTask.Wait();
 				if (!CreateTask.Result) return;
 				Console.WriteLine($"Created {DifferenceInDays - 1} days history for {currencyID}");
-				Task.Delay(15000).Wait();
+				await Task.Delay(15000);
 			}
 		}
 		

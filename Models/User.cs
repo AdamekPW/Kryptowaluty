@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -35,6 +36,10 @@ public partial class User
     [Required]
     public int RoleId { get; set; }
 
+    [Required]
+    [Column(TypeName = "decimal(20, 10)")]
+    [Range(0, double.MaxValue, ErrorMessage = "USDT_balance must be non-negative.")]
+    public decimal USDT_balance { get; set; }
 
     //nav properties
     [JsonIgnore]

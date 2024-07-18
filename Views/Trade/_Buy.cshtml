@@ -1,2 +1,74 @@
-﻿@model WalletCurrencyValue
-<p> Buy </p>
+﻿<link rel="stylesheet" href="~/css/Trade.css">
+
+<form asp-action="Buy" method="post">
+    <div class="inputRow">
+        <div class="inputContainer">
+            <input id="QtyUSDT" placeholder="Qty" />
+            <input id="USDTBox" value="USDT" readonly />
+        </div>
+        <div id="sliderContainer">
+            <input type="range" id="slider" min="0" max="100" value="0">
+            <span id="sliderValueBox"> 0%</span>
+        </div>
+    </div>
+    <div class="inputRow">
+        <div class="inputContainer">
+            <input id="Qty" placeholder="Qty" readonly/> 
+            <input id="CodeBox" readonly />
+        </div>
+
+   
+    </div>
+    <button id="ConfirmOrderButton"> Buy </button>
+</form>
+
+
+
+
+<script src="~/js/TradeUser.js"> </script>
+<script>
+    $(document).ready(function () {
+        const CodeBox = document.getElementById('CodeBox');
+        CodeBox.value = Code;
+
+        const ConfirmOrderButton = document.getElementById("ConfirmOrderButton");
+        const BuySellSwitch = document.getElementById("BuySellSwitch");
+        const slider = document.getElementById("slider");
+        const sliderValueBox = document.getElementById("sliderValueBox");
+        const QtyInput = document.getElementById("Qty");
+        const QtyUSDTInput = document.getElementById("QtyUSDT");
+     
+
+
+        UserBalance = UserUSDTBalance;
+
+        function CalculateValue() {
+            QtyInput.value = QtyUSDTInput.value / Cur.Currency.Value;
+        }
+
+        function GetSliderValue() {
+            sliderValueBox.textContent = slider.value + '%';
+            QtyUSDTInput.value = ((slider.value / 100) * UserBalance).toFixed(3);
+            CalculateValue();
+
+        }
+        function CheckIfLessThanBalance() {
+            const CurrentValue = QtyInput.value;
+            if (CurrentValue > UserBalance) {
+                QtyInput.value = UserBalance;
+            }
+            CalculateValue();
+        }
+        
+
+
+        QtyInput.addEventListener('input', AllowOnlyDecimal);
+        QtyUSDTInput.addEventListener('input', AllowOnlyDecimal);
+        slider.addEventListener('input', GetSliderValue);
+        QtyInput.addEventListener('input', CheckIfLessThanBalance);
+
+
+    })
+</script>
+
+

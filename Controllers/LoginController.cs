@@ -94,7 +94,7 @@ namespace ASP_.NET_nauka.Controllers
             user.RoleId = (from role in _db.Roles
                         where role.Name == "User"
                         select role.Id).FirstOrDefault();
-
+            user.USDT_balance = 1000;
 
             _db.Users.Add(user);
             _db.SaveChanges();

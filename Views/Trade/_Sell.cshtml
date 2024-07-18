@@ -1,12 +1,10 @@
-﻿@model WalletCurrencyValue
-
-<link rel="stylesheet" href="~/css/Trade.css">
+﻿<link rel="stylesheet" href="~/css/Trade.css">
 
 <form>
     <div class="inputRow">
         <div class="inputContainer">
             <input id="Qty" placeholder="Qty" />
-            <input id="CodeBox" />
+            <input id="CodeBox" readonly/>
         </div>
         <div id="sliderContainer">
             <input type="range" id="slider" min="0" max="100" value="0">
@@ -15,11 +13,11 @@
     </div>
     <div class="inputRow">
         <div class="inputContainer">
-            <input id="QtyUSDT" placeholder="QtyUSDT" />
+            <input id="QtyUSDT" placeholder="QtyUSDT" readonly/>
             <input id="USDTBox" value="USDT" readonly />
         </div>
 
-        <button id="CurrentPriceButton"> Current value </button>
+       
     </div>
     <button id="ConfirmOrderButton"> Buy </button>
 </form>
@@ -34,30 +32,32 @@ $(document).ready(function ()
     const CodeBox = document.getElementById('CodeBox');
     CodeBox.value = Code;
 
-    var Model = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
-    var UserBalance = Model.Value;
-
     const ConfirmOrderButton = document.getElementById("ConfirmOrderButton");
     const BuySellSwitch = document.getElementById("BuySellSwitch");
     const slider = document.getElementById("slider");
     const sliderValueBox = document.getElementById("sliderValueBox");
     const QtyInput = document.getElementById("Qty");
     const QtyUSDTInput = document.getElementById("QtyUSDT");
-    const CurrenValueButton = document.getElementById("CurrentPriceButton");
+ 
 
-
+    function CalculateValue() {
+        QtyUSDTInput.value = QtyInput.value * Cur.Currency.Value;
+    }
 
     function GetSliderValue() {
         sliderValueBox.textContent = slider.value + '%';
         QtyInput.value = ((slider.value / 100) * UserBalance).toFixed(8);
+        CalculateValue();
+    }
+    function CheckIfLessThanBalance() {
+        const CurrentValue = QtyInput.value;
+        if (CurrentValue > UserBalance) {
+            QtyInput.value = UserBalance;
+        }
+        CalculateValue();
     }
 
-    document.getElementById('CurrentPriceButton').addEventListener('click', function (event) {
-        event.preventDefault();
-        console.log(Cur);
-        QtyUSDTInput.value = Cur.Currency.Value;
 
-    });
 
     QtyInput.addEventListener('input', AllowOnlyDecimal);
     QtyUSDTInput.addEventListener('input', AllowOnlyDecimal);
