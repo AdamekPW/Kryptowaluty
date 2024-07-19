@@ -3,6 +3,12 @@
 <link rel="stylesheet" href="~/css/Trade.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@latest/dist/apexcharts.css">
 
+@{
+    var successMessage = TempData["OrderSuccessMessage"] as string;
+}
+
+
+
 <div class="TradeMainContainer">
     <div class="TradeChartContainer">
         <div id="TradeUpbarContainer">
@@ -12,10 +18,10 @@
     </div>
     <div class="Trade">
         <div class="TradeOrderBook">
-            <div class="TradeOrderBookPart" id="Sell">
+            <div class="TradeOrderBookPart" id="Sellers">
 
             </div>
-            <div class="TradeOrderBookPart" id="Buy">
+            <div class="TradeOrderBookPart" id="Buyers">
 
             </div>
 
@@ -43,6 +49,11 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            var message = '@successMessage';
+            if (message) {
+                alert(message);
+            }
+
             var curId = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Currency.Id));
             $('#BuySellForm').load("/Trade/" + curId + "/Buy");
             UserBalance = Cur.User.USDT_balance;

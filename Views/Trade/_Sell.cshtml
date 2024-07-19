@@ -1,9 +1,10 @@
-﻿<link rel="stylesheet" href="~/css/Trade.css">
+﻿@model OrderPackage
+<link rel="stylesheet" href="~/css/Trade.css">
 
-<form>
+<form asp-action="Sell" asp-controller="Order" method="post">
     <div class="inputRow">
         <div class="inputContainer">
-            <input id="Qty" placeholder="Qty" />
+            <input asp-for="Qty" id="Qty" placeholder="Qty" required/>
             <input id="CodeBox" readonly/>
         </div>
         <div id="sliderContainer">
@@ -13,13 +14,12 @@
     </div>
     <div class="inputRow">
         <div class="inputContainer">
-            <input id="QtyUSDT" placeholder="QtyUSDT" readonly/>
+            <input asp-for="QtyUSDT" id="QtyUSDT" placeholder="QtyUSDT" readonly />
             <input id="USDTBox" value="USDT" readonly />
         </div>
-
-       
     </div>
-    <button id="ConfirmOrderButton"> Buy </button>
+    <input type="hidden" name="currencyId" id="currencyId" />
+    <button id="ConfirmOrderButton" style="background-color: #fc5f3f"> Buy </button>
 </form>
 
 
@@ -29,6 +29,9 @@
 <script>
 $(document).ready(function () 
 {
+    var hiddenInput = document.getElementById("currencyId");
+    hiddenInput.value = Cur.Currency.Id;
+
     const CodeBox = document.getElementById('CodeBox');
     CodeBox.value = Code;
 
@@ -41,7 +44,7 @@ $(document).ready(function ()
  
 
     function CalculateValue() {
-        QtyUSDTInput.value = QtyInput.value * Cur.Currency.Value;
+        QtyUSDTInput.value = (QtyInput.value * Cur.Currency.Value).toFixed(2);
     }
 
     function GetSliderValue() {

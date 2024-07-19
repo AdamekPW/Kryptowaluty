@@ -17,15 +17,14 @@ public class TradeController : Controller
     [HttpGet("Buy")]
     public IActionResult BuyPartial(string currencyId)
     {
-        WalletCurrencyValue curValue = GetCurrencyValue(currencyId);
-        return PartialView("_Buy", curValue);
+   
+        return PartialView("_Buy");
     }
 
     [HttpGet("Sell")]
     public IActionResult SellPartial(string currencyId)
     {
-		WalletCurrencyValue curValue = GetCurrencyValue(currencyId);
-        return PartialView("_Sell", curValue);
+        return PartialView("_Sell");
     }
 
     public IActionResult Index(string currencyId)
@@ -42,22 +41,8 @@ public class TradeController : Controller
 		return View(package);
 	}
 
-    /*[HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Buy()
-    {
-        return RedirectToAction("Index");
-    }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Sell()
-    {
-
-        return RedirectToAction("Index");
-    }*/
-
-	private TradeChartPackage CreatePackage(Currency currency)
+    private TradeChartPackage CreatePackage(Currency currency)
 	{
         TradeChartPackage package = new TradeChartPackage();
         package.Currency = currency;

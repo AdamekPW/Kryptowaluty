@@ -1,9 +1,11 @@
-﻿<link rel="stylesheet" href="~/css/Trade.css">
+﻿@model OrderPackage
 
-<form asp-action="Buy" method="post">
+<link rel="stylesheet" href="~/css/Trade.css">
+
+<form asp-action="Buy" asp-controller="Order" method="post">
     <div class="inputRow">
         <div class="inputContainer">
-            <input id="QtyUSDT" placeholder="Qty" />
+            <input asp-for="QtyUSDT" id="QtyUSDT" placeholder="Qty" required/>
             <input id="USDTBox" value="USDT" readonly />
         </div>
         <div id="sliderContainer">
@@ -13,12 +15,11 @@
     </div>
     <div class="inputRow">
         <div class="inputContainer">
-            <input id="Qty" placeholder="Qty" readonly/> 
+            <input asp-for="Qty" id="Qty" placeholder="Qty" readonly/> 
             <input id="CodeBox" readonly />
         </div>
-
-   
     </div>
+    <input type="hidden" name="currencyId" id="currencyId" />
     <button id="ConfirmOrderButton"> Buy </button>
 </form>
 
@@ -27,6 +28,10 @@
 
 <script src="~/js/TradeUser.js"> </script>
 <script>
+    var hiddenInput = document.getElementById("currencyId");
+    hiddenInput.value = Cur.Currency.Id;
+
+
     $(document).ready(function () {
         const CodeBox = document.getElementById('CodeBox');
         CodeBox.value = Code;
