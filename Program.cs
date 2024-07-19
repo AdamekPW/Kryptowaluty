@@ -45,4 +45,5 @@ app.MapControllerRoute(
 
 
 app.MapHub<CurrenciesHub>("/CurrenciesHub");
+app.MapHub<OrderHub>("/OrdersHub");
 app.Run();

@@ -22,6 +22,8 @@ public partial class ActiveOrder
     [Required]
     public DateTime DateOfIssue { get; set; }
 
+    [Required]
+    public bool IsBuyer { get; set; }
 
     //Foreign keys
     [Required]

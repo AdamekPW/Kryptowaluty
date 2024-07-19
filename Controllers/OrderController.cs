@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
 using ASP_.NET_nauka.Data;
+using ASP_.NET_nauka.Hubs;
 using ASP_.NET_nauka.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ASP_.NET_nauka.Controllers;
 
@@ -9,9 +11,13 @@ namespace ASP_.NET_nauka.Controllers;
 public class OrderController : Controller
 {
     private readonly MyDbContext _db;
-    public OrderController(MyDbContext db)
+
+    private readonly IHubContext<OrderHub> _hubContext;
+
+    public OrderController(MyDbContext db, IHubContext<OrderHub> hubContext)
     {
         _db = db;
+        _hubContext = hubContext;
     }
 
 
@@ -48,12 +54,13 @@ public class OrderController : Controller
         }
 
         User? user = _db.Users.Where(x => x.Id == UserId).FirstOrDefault();
-        if (user == null || user.USDT_balance - QtyUSDT < 0)
+        if (user == null || user.USDT_balance - QtyUSDT <= 0)
         {
-            TempData["OrderSuccessMessage"] = "Balance not correct";
+            TempData["OrderSuccessMessage"] = "Not enough money";
             return RedirectToAction("Index", "Trade", new { currencyId });
         }
 
+        user.USDT_balance -= QtyUSDT;
 
         decimal Qty = QtyUSDT / value;
 
@@ -64,11 +71,18 @@ public class OrderController : Controller
             DateOfIssue = DateTime.Now,
             UserId = UserId,
             CurrencyId = currencyId,
+            IsBuyer = true
         };
         _db.ActiveOrders.Add(activeOrder);
         _db.SaveChanges();
 
         TempData["OrderSuccessMessage"] = "Order created successful";
+
+
+        IEnumerable<ActiveOrder> activeOrders = _db.ActiveOrders.ToList();
+        _hubContext.Clients.All.SendAsync(currencyId, activeOrders);
+
+
         return RedirectToAction("Index", "Trade", new { currencyId });
     }
 

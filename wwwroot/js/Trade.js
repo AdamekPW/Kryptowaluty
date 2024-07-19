@@ -1,10 +1,10 @@
 ﻿"use strict";
-var connection = new signalR.HubConnectionBuilder().withUrl("/CurrenciesHub").build();
+var CurrencyConnection = new signalR.HubConnectionBuilder().withUrl("/CurrenciesHub").build();
 
 const TradeUpbarContainer = document.getElementById("TradeUpbarContainer");
 
 
-connection.start();
+CurrencyConnection.start();
 function FixValue(value) {
     if (value > 10000) {
         return value.toFixed(0);
@@ -60,7 +60,7 @@ AddChange(Cur.Currency.Change);
 
 
 
-connection.on("ReceiveCurrencies", function (currencies) {
+CurrencyConnection.on("ReceiveCurrencies", function (currencies) {
     TradeUpbarContainer.innerHTML = '';
     currencies.forEach(function (currency) {
         if (currency.id === Cur.Currency.Id) {

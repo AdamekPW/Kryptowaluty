@@ -25,6 +25,9 @@ public partial class CompletedOrder
     [Required]
     public DateTime EndDate {  get; set; }
 
+    [Required]
+    public bool IsBuyer { get; set; }
+
 
     //Foreign keys
     [Required]
