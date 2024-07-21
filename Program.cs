@@ -2,6 +2,8 @@ using ASP_.NET_nauka.Data;
 using Microsoft.EntityFrameworkCore;
 using ASP_.NET_nauka.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Threading.Channels;
+using ASP_.NET_nauka.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,6 +21,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 		option.LoginPath = "/Login";
 		option.ExpireTimeSpan = TimeSpan.FromDays(2);
 	});
+
+builder.Services.AddSingleton(Channel.CreateUnbounded<ActiveOrder>());
+
 
 
 var app = builder.Build();

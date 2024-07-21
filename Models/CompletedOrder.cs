@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.VisualBasic;
 
 namespace ASP_.NET_nauka.Models;
 
@@ -44,4 +45,18 @@ public partial class CompletedOrder
 
     [JsonIgnore]
     public User User { get; set; } = null!;
+
+
+    public CompletedOrder() { }
+    public CompletedOrder(ActiveOrder activeOrder, DateTime endDate)
+    {
+        Qty = Math.Round(activeOrder.Qty, 7);
+        QtyUSDT = Math.Round(activeOrder.QtyUSDT, 3);
+        DateOfIssue = activeOrder.DateOfIssue;
+        EndDate = endDate;
+        UserId = activeOrder.UserId;
+        CurrencyId = activeOrder.CurrencyId;
+        IsBuyer = activeOrder.IsBuyer;
+
+    }
 }

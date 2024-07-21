@@ -38,37 +38,7 @@
     padding-left: 1vw;
 }
 
-.TradeOrderBook {
-    width: 100%;
-    height: 40vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-    .TradeOrderBook .TradeOrderBookPart {
-        width: 46%;
-        height: 100%;
-        border: 6px solid transparent;
-        border-radius: 10px;
 
-        display: flex;
-        flex-direction: column;
-        
-        align-items: center;
-        overflow-y: scroll;
-        
-    }
-
-#Sellers {
-    border: 6px solid #820311;
-    margin-right: 20px
-}
-
-#Buyers {
-    border: 6px solid #074f06;
-    
-}
 
 
 
@@ -258,3 +228,91 @@ input:checked + .slider:before {
     border-right: 2px solid black;
     outline: none;
 }
+
+
+
+
+.TradeOrderBook {
+    width: 100%;
+    height: 40vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+    .TradeOrderBookPart {
+        width: 46%;
+        height: 100%;
+        border: 6px solid transparent;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+.Sellers {
+    border: 6px solid #994b4b;
+    margin-right: 20px
+}
+.Buyers {
+    border: 6px solid #074f06;
+}
+
+
+.Orders {
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.OrderHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    border-bottom: 4px solid #074f06;
+}
+.OrderHeader p {
+    width: 50%;
+    padding-top: 2px;
+    margin: 0px;
+    font-weight: 600;
+    font-size: larger;
+}
+.BuyersRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    background-color: #b9ffb5;
+    margin-bottom: 5px;
+}
+    .BuyersRow .Box {
+        width: 50%;
+        font-size: large;
+        font-weight: 600;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+.SellersRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    background-color: #fcb1b1;
+    margin-bottom: 5px;
+}
+
+    .SellersRow .Box {
+        width: 50%;
+        font-size: large;
+        font-weight: 600;
+        padding-left: 4px;
+        padding-right: 4px;
+    }

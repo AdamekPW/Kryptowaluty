@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.Contracts;
+using System.Threading.Channels;
 using ASP_.NET_nauka.Data;
 using ASP_.NET_nauka.Hubs;
 using ASP_.NET_nauka.Models;
@@ -14,13 +15,20 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 public class DataUpdater : BackgroundService
 {
 	private readonly IServiceProvider _serviceProvider;
-	private readonly IHubContext<CurrenciesHub> _hubContext;
+	private readonly IHubContext<CurrenciesHub> _CurrenciesHubContext;
 	private readonly HttpClient _httpClient;
-	public DataUpdater(IServiceProvider serviceProvider, IHubContext<CurrenciesHub> hubContext, HttpClient httpClient)
+	private readonly Channel<ActiveOrder> _ActiveOrderChannel;
+
+	public DataUpdater(IServiceProvider serviceProvider, 
+		IHubContext<CurrenciesHub> CurrenciesHubContext,
+        IHubContext<OrderHub> OrderHubContext,
+        HttpClient httpClient,
+        Channel<ActiveOrder> ActiveOrder)
 	{
 		_serviceProvider = serviceProvider;
-		_hubContext = hubContext;
+        _CurrenciesHubContext = CurrenciesHubContext;
 		_httpClient = httpClient;
+		_ActiveOrderChannel = ActiveOrder;
 	}
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
@@ -32,21 +40,25 @@ public class DataUpdater : BackgroundService
 				throw new Exception("Service provider error");
 			}
 
-			
-
 			await UpdateDatabase(dbContext);
 			while (!stoppingToken.IsCancellationRequested)
 			{
 				await UpdateCurrencies(dbContext, _httpClient);
 				CalculateChange(dbContext);
 				IEnumerable<Currency> currencies = dbContext.Currencies.ToList();
-				await _hubContext.Clients.All.SendAsync("ReceiveCurrencies", currencies);
+				await _CurrenciesHubContext.Clients.All.SendAsync("ReceiveCurrencies", currencies);
 				Console.WriteLine("----------DBUpdate----------");
 				await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
 			}
 		}
 
 	}
+
+
+
+
+
+
 	public static async Task UpdateCurrencies(MyDbContext _db, HttpClient client)
 	{
 		List<string> CurrenciesIDs = _db.Currencies.Select(x => x.Id).ToList();

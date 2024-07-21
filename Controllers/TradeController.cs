@@ -92,7 +92,17 @@ public class TradeController : Controller
             walletCurrencyValue.Value = 0;
         }
         package.WalletCurrencyValue = walletCurrencyValue;
-        return package;
+
+        package.CompletedBuyOrders = _db.CompletedOrders
+            .Where(x => x.IsBuyer == true && x.CurrencyId == currency.Id)
+            .Take(10)
+            .ToList();
+        package.CompletedSellOrders = _db.CompletedOrders
+			.Where(x => x.IsBuyer == false && x.CurrencyId == currency.Id)
+			.Take(10)
+			.ToList();
+
+		return package;
     }
 
     private WalletCurrencyValue GetCurrencyValue(string currencyId)
