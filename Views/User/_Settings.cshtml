@@ -1,1 +1,157 @@
-﻿<p> Settings </p>
+﻿@model User
+<link rel="stylesheet" href="~/css/_Settings.css" />
+@if (TempData["PasswordChange"] != null)
+{
+	string? Message = (TempData["PasswordChange"]) as string;
+	if (Message != null)
+	{
+		if (Message == "Password changed successfuly")
+		{
+			<div class="PasswordInfo" style="background-color: greenyellow">
+				@Message
+			</div>
+		}
+		else if (Message == "Password cannot be the same")
+		{
+			<div class="PasswordInfo" style="background-color: #f5837d">
+				@Message
+			</div>
+		}
+	}
+
+
+}
+<div class="AccountInfo">
+	<div class="Row">
+		<input class="rb" value="Name:" readonly />
+		<input class="lb" value=@Model.FirstName readonly />
+	</div>
+	<div class="Row">
+		<input class="rb" value="Lastname:" readonly />
+		<input class="lb" value=@Model.LastName readonly />
+	</div>
+	<div class="Row">
+		<input class="rb" value="Emial:" readonly />
+		<input class="lb" style="width: fit-content" value=@Model.Email readonly />
+	</div>
+	<div class="Row">
+		<input class="rb" value="Birthdate:" readonly />
+		<input class="lb" style="width: fit-content" value=@Model.BirthDate readonly />
+	</div>
+	<div class="Row">
+		<input class="rb" value="Password:" readonly />
+		<input class="lb" style="width: 14vw" value=JakiesTwojePrzyHaslo readonly type="password"/>
+		<button id="ChangePassword"> Change password</button>
+	</div>
+	<div id="slidingDiv">
+		<form method="POST" asp-action="ChangePassword">
+			<div class="Row">
+
+				<input class="rb" value="New password: " readonly/>
+				<div class="strengthBarContainer">
+					<input asp-for="Password" style="border: 2px solid #ccc; margin-bottom: 0px" type="password" id="pass1" required/>
+					<div class="strengthBar">
+						<div id="strengthIndicator" class="strength"></div>
+					</div>
+				</div>
+			</div>
+			<div class="Row">
+				<input class="rb" value="Repeat new password: " readonly/>
+				<input style="border: 2px solid #ccc; margin-bottom: 5px" type="password" id="pass2" required/>
+			</div>
+			<div class="buttonContainer">
+				<button id="SubmitButton"> Submit</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script>
+	{
+		const PasswordInput1 = document.getElementById('pass1');
+		const PasswordInput2 = document.getElementById('pass2');
+		const SubmitButton = document.getElementById('SubmitButton');
+		const strengthIndicator = document.getElementById("strengthIndicator");
+		function CheckPasswords() {
+			var PInput1 = PasswordInput1.value;
+			var PInput2 = PasswordInput2.value;
+
+			if (PInput1 === "" || PInput2 === "") {
+				SubmitButton.disabled = true;
+				PasswordInput1.style.border = "2px solid #ccc";
+				PasswordInput2.style.border = "2px solid #ccc"
+			} else if (PInput1 === PInput2 && PInput2 !== "") {
+				SubmitButton.disabled = false;
+				PasswordInput1.style.border = "2px solid green"
+				PasswordInput2.style.border = "2px solid green"
+			} else {
+				SubmitButton.disabled = true;
+				PasswordInput1.style.border = "2px solid red"
+				PasswordInput2.style.border = "2px solid red"
+			}
+		}
+
+		function checkPasswordStrength() {
+			var password = PasswordInput1.value;
+			var strength = 0;
+
+			if (password.length >= 8) strength += 1;               // Długość hasła
+			if (/[A-Z]/.test(password)) strength += 1;             // Wielkie litery
+			if (/[a-z]/.test(password)) strength += 1;             // Małe litery
+			if (/[0-9]/.test(password)) strength += 1;             // Cyfry
+			if (/[\W]/.test(password)) strength += 1;              // Znaki specjalne
+
+
+			switch (strength) {
+				case 0:
+					strengthIndicator.style.width = "0%";
+					strengthIndicator.style.backgroundColor = "white";
+					break;
+				case 1:
+					strengthIndicator.style.width = "20%";
+					strengthIndicator.style.backgroundColor = "red";
+					break;
+				case 2:
+					strengthIndicator.style.width = "40%";
+					strengthIndicator.style.backgroundColor = "orange";
+					break;
+				case 3:
+					strengthIndicator.style.width = "60%";
+					strengthIndicator.style.backgroundColor = "yellow";
+					break;
+				case 4:
+					strengthIndicator.style.width = "80%";
+					strengthIndicator.style.backgroundColor = "blue";
+
+					break;
+				case 5:
+					strengthIndicator.style.width = "100%";
+					strengthIndicator.style.backgroundColor = "green";
+					break;
+			}
+		}
+
+
+
+		PasswordInput1.addEventListener("input", CheckPasswords);
+		PasswordInput2.addEventListener("input", CheckPasswords);
+		PasswordInput1.addEventListener("input", checkPasswordStrength);
+		document.getElementById('ChangePassword').addEventListener('click', function () {
+			var slidingDiv = document.getElementById('slidingDiv');
+			if (slidingDiv.classList.contains('show')) {
+				slidingDiv.classList.remove('show');
+
+				setTimeout(function () {
+					slidingDiv.style.display = 'none';
+				}, 1000);
+			} else {
+				slidingDiv.style.display = 'block';
+				setTimeout(function () {
+					slidingDiv.classList.add('show');
+				}, 10);
+			}
+		});
+
+	}
+</script>

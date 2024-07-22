@@ -1,0 +1,98 @@
+﻿.PasswordInfo {
+    width: 80%;
+    font-size: x-large;
+    font-weight: 600;
+    text-align: center;
+}
+.AccountInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 80%;
+}
+.AccountInfo .Row {
+   display: flex;
+   flex-direction: row;
+}
+.AccountInfo input {
+    border: 0px solid green;
+    font-size: x-large;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    margin: 0px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    width: 10vw;
+    
+}
+.AccountInfo input:focus{
+    outline: none;
+}
+
+.AccountInfo .lb {
+    border-left: 0px;
+}
+.AccountInfo .rb {
+    border-right: 0px;
+}
+#ChangePassword {
+    border: 0px solid transparent;
+    background-color: transparent;
+    font-size: larger;
+}
+#ChangePassword:hover{
+    font-weight: 600;
+}
+
+#slidingDiv {
+    width: 40vw;
+    max-height: 0;
+    background-color: transparent;
+    overflow: hidden;
+    transition: max-height 1s ease-out; /* Animacja wysuwania */
+    display: none; /* Początkowo ukryty */
+}
+
+    #slidingDiv.show {
+        max-height: 200px; /* Wysokość po wysunięciu */
+        display: block;
+    }
+
+    #slidingDiv input {
+        width: auto;
+    }
+    #slidingDiv .buttonContainer {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #slidingDiv button {
+        background-color: lightgreen;
+        border: 2px solid transparent;
+        width: 40%;
+        font-size: x-large;
+        border-radius: 15px;
+    }
+    #slidingDiv button:hover {
+        color:green;
+        border: 2px solid green;
+    }
+.strengthBarContainer {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+.strengthBar {
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+}
+
+.strength {
+    height: 100%;
+    width: 0%;
+    background-color: red;
+    transition: width 0.3s;
+}

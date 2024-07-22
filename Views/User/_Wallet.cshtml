@@ -6,8 +6,9 @@
 
 <div class="tableContainer">
 	<div class="totalBalanceContainer">
-		<div></div>
-		<div class="BalanceBox"> Total Equity: @Math.Round(FrontendFunctions.CalculateTotalEquity(Model), 4) USD </div>
+		
+		<div class="BalanceBox">USDT Amount: @Math.Round(Model.User.USDT_balance, 2)</div>
+		<div class="BalanceBox"> Total Equity: @Math.Round(FrontendFunctions.CalculateTotalEquity(Model), 2) USD </div>
 	</div>
 
 	<table class="table table-bordered" style="width:100%">

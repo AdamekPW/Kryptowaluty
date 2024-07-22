@@ -18,6 +18,9 @@
     width: 60%; 
     border: white;
 }
+.datePicker:focus{
+    outline: none;
+}
 .strengthBar {
     width: 100%;
     height: 10px;

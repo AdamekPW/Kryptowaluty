@@ -61,7 +61,7 @@ public class OrderController : Controller
 
 
         User? user = _db.Users.Where(x => x.Id == UserId).FirstOrDefault();
-        if (user == null || user.USDT_balance - QtyUSDT <= 0)
+        if (user == null || user.USDT_balance - QtyUSDT < 0)
         {
             TempData["OrderSuccessMessage"] = "Not enough money";
             return RedirectToAction("Index", "Trade", new { currencyId });
@@ -129,7 +129,7 @@ public class OrderController : Controller
 			TempData["OrderSuccessMessage"] = "Qty must be greater than 0";
 			return RedirectToAction("Index", "Trade", new { currencyId });
 		}
-
+        Qty = (decimal)0.995 * Qty;
         User? user = _db.Users.Where(x => x.Id == UserId).FirstOrDefault();
 
         if (user == null)
@@ -213,6 +213,7 @@ public class OrderController : Controller
             }
 
             user.USDT_balance -= activeOrder.QtyUSDT;
+            if (user.USDT_balance < 0) user.USDT_balance = 0;
         
             WalletCurrencyValue? WCV = _db.WalletCurrencyValues
                 .Where(x => x.UserId == activeOrder.UserId 

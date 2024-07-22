@@ -59,7 +59,7 @@ namespace ASP_.NET_nauka.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewData["ValidateMessage"] = "User not found";
+            ViewData["ValidateMessage"] = "User not found or password is incorrect";
             return View();
         }
 
@@ -97,6 +97,13 @@ namespace ASP_.NET_nauka.Controllers
             user.USDT_balance = 1000;
 
             _db.Users.Add(user);
+			_db.SaveChanges();
+
+            Wallet UserWallet = new();
+            UserWallet.UserId = user.Id;
+            UserWallet.latestUpdate = DateTime.Now;
+
+			_db.Wallets.Add(UserWallet);
             _db.SaveChanges();
 
             return RedirectToAction("Index", "Home");  

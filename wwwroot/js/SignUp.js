@@ -28,11 +28,23 @@ function CheckLastname() {
 
 function CheckBirthdate() {
     if (BirthdateInput.value !== "") {
-        BirthdateContainer.style.border = "1px solid green";
+        const birthdate = new Date(BirthdateInput.value);
+        const today = new Date();
+        const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+
+        if (birthdate <= eighteenYearsAgo) {
+            BirthdateContainer.style.border = "1px solid green";
+            Button.disabled = false;
+        } else {
+            BirthdateContainer.style.border = "1px solid red";
+            alert("You must be at least 18 years old");
+            Button.disabled = true;
+        }
     } else {
         BirthdateContainer.style.border = "1px solid #ccc";
     }
 }
+
 
 function CheckPasswords() {
     var PInput1 = PasswordInput1.value;

@@ -48,7 +48,7 @@ public class DataUpdater : BackgroundService
 				IEnumerable<Currency> currencies = dbContext.Currencies.ToList();
 				await _CurrenciesHubContext.Clients.All.SendAsync("ReceiveCurrencies", currencies);
 				Console.WriteLine("----------DBUpdate----------");
-				await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+				await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
 			}
 		}
 
@@ -74,13 +74,24 @@ public class DataUpdater : BackgroundService
 				Console.WriteLine("Data is null");
 				return;
 			}
-			Console.WriteLine(jsonObject);
-			foreach (Currency currency in _db.Currencies)
+			
+
+			foreach (Currency currency in _db.Currencies.ToList())
 			{
+				DateTime MaxDate = _db.Currencies
+					.Where(x => x.Id == currency.Id)
+					.Max(x => x.Date);
 				decimal NewValue = decimal.Parse(jsonObject[currency.Id]["usd"].ToString());
 				currency.Value = NewValue;
-				if (currency.Low > NewValue || currency.Low == 0) currency.Low = NewValue;
-				if (currency.High < NewValue) currency.High = NewValue;
+				if (MaxDate.Date < DateTime.Now.Date)
+				{
+					currency.Low = NewValue;
+					currency.High = NewValue;
+				} else
+				{
+					if (currency.Low > NewValue || currency.Low == 0) currency.Low = NewValue;
+					if (currency.High < NewValue) currency.High = NewValue;
+				}
 				currency.Date = DateTime.Now;
 			}
 

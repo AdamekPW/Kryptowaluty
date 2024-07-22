@@ -1,1 +1,42 @@
-﻿<p> History </p>
+﻿@model IEnumerable<HistoryRecord>
+@*
+	Currency name and code
+	Qty
+	QtyUSDT
+	Date
+	Buy or Sell
+*@
+<link rel="stylesheet" href="~/css/_History.css" />
+<table id="HistoryTable">
+	<thead>
+		<tr>
+			<th>Currency</th>
+			<th>Qty</th>
+			<th>Qty</th>
+			<th>Date</th>
+			<th>Type</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var element in Model)
+		{
+			<tr>
+				<td>@element.Currency.Name</td>
+				@if (element.CompletedOrder.IsBuyer)
+				{
+					<td>@($"{FrontendFunctions.RemoveZeros(element.CompletedOrder.QtyUSDT)} USDT")</td>
+					<td>@($"{FrontendFunctions.RemoveZeros(element.CompletedOrder.Qty)} {element.Currency.Code}")</td>
+					<td>@element.CompletedOrder.EndDate</td>
+					<td style="color: green">Buy</td>
+				} else
+				{
+					<td>@($"{FrontendFunctions.RemoveZeros(element.CompletedOrder.Qty)} {element.Currency.Code}")</td>
+					<td>@($"{FrontendFunctions.RemoveZeros(element.CompletedOrder.QtyUSDT)} USDT")</td>
+					<td>@element.CompletedOrder.EndDate</td>
+					<td style="color: red"> Sell </td>
+				}
+				
+			</tr>
+		}
+	</tbody>
+</table>
