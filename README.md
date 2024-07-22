@@ -19,3 +19,8 @@ the system calculates the difference in days between the last date and today's d
 retrieves the missing data and calculates the necessary parameters (in this case there is some approximation, 
 as CoinGecko allows access to 24 measurements from a single day).
 
+![image](https://github.com/user-attachments/assets/03c554de-f7cd-4830-a9b1-33262236c4c5)
+![image](https://github.com/user-attachments/assets/e737b4bb-fb4e-4d78-b17e-ce8f7193f9e4)
+![image](https://github.com/user-attachments/assets/b73a78a7-bbdf-4b1c-9686-f3dec0e3e42c)
+![image](https://github.com/user-attachments/assets/9c722d40-e9bf-4df8-9183-db71f1e4152a)
+![image](https://github.com/user-attachments/assets/b346cebe-b0ac-4b33-a864-56971019c96e)
